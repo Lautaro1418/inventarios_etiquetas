@@ -1,0 +1,353 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Formulario de conteo físico</title>
+  <style>
+    * { box-sizing: border-box; }
+    body {
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Arial, sans-serif;
+      margin: 16px;
+      line-height: 1.4;
+    }
+    h1 { margin-bottom: 4px; }
+    .sub {
+      font-size: 13px;
+      color: #555;
+      margin-bottom: 16px;
+    }
+
+    .toolbar {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px 12px;
+      align-items: center;
+      margin-bottom: 12px;
+    }
+    .toolbar > * { margin: 0; }
+
+    select, input, textarea, button {
+      padding: 8px 10px;
+      font-size: 14px;
+      border-radius: 4px;
+      border: 1px solid #ccc;
+    }
+
+    button {
+      cursor: pointer;
+      border: none;
+      font-weight: 500;
+    }
+    #btnCargar { background: #2563eb; color: white; }
+    #btnGuardar { background: #16a34a; color: white; }
+    #btnImprimir { background: #6b7280; color: white; }
+
+    button:disabled { opacity: 0.5; cursor: not-allowed; }
+
+    #status { font-size: 13px; min-height: 18px; }
+    #status.ok { color: #15803d; }
+    #status.err { color: #b91c1c; }
+    #status.info { color: #4b5563; }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 8px;
+      font-size: 13px;
+    }
+    th, td {
+      border: 1px solid #e5e5e5;
+      padding: 6px 4px;
+      vertical-align: top;
+    }
+    th {
+      background: #f3f4f6;
+      text-align: left;
+      position: sticky;
+      top: 0;
+    }
+
+    input[type="number"] { width: 100%; }
+    textarea { width: 100%; min-height: 40px; resize: vertical; }
+
+    .motivo-input { width: 100%; }
+
+    .table-wrapper { overflow-x: auto; }
+
+    @media (max-width: 768px) {
+      table { font-size: 12px; }
+      th, td { padding: 4px; }
+    }
+
+    @media print {
+      .no-print { display: none !important; }
+      body { margin: 0; }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="no-print">
+    <h1>Formulario de conteo físico</h1>
+    <div class="sub">
+      La web lee de <strong>CARGA DE DATOS N+2</strong> y registra en <strong>REGISTRO CONTEO</strong>.
+    </div>
+
+    <div class="toolbar">
+      <div>
+        <label for="responsable">Responsable</label><br>
+        <select id="responsable"></select>
+      </div>
+
+      <button id="btnCargar">Cargar mis insumos</button>
+      <button id="btnGuardar" disabled>Guardar conteos</button>
+      <button id="btnImprimir">Imprimir listado</button>
+
+      <div id="status" class="info"></div>
+    </div>
+  </div>
+
+  <div class="table-wrapper">
+    <table id="tabla">
+      <thead>
+        <tr>
+          <th>Código</th>
+          <th>Descripción</th>
+          <th>Stock 1030</th>
+          <th>Stock 1032</th>
+          <th>Día stock</th>
+          <th>Conteo físico</th>
+          <th>Motivo del conteo</th>
+          <th>Observaciones</th>
+        </tr>
+      </thead>
+      <tbody></tbody>
+    </table>
+  </div>
+
+<script>
+  // ==== CONFIG: URLs de tus Flows ====
+  const URL_PLAN =
+    "https://defaultd83e43d1620044fbb4f6a908d91c2e.22.environment.api.powerplatform.com:443/powerautomate/automations/direct/workflows/59b0d1d8c50c4277b875cb90c744d925/triggers/manual/paths/invoke?api-version=1&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=nTWG-VHLTpxBq_lVT8BwliveH9lxEFEcFhRisJDhd_g";
+
+  const URL_GUARDAR =
+    "https://defaultd83e43d1620044fbb4f6a908d91c2e.22.environment.api.powerplatform.com:443/powerautomate/automations/direct/workflows/db8f32640e3342199cad89ba5beca1a5/triggers/manual/paths/invoke?api-version=1&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=r_Y84605bC4pYKqpBNnQywaD3Qf5bY-jvVVBftQvkdU";
+
+  const RESPONSABLES_FIJOS = ["JQ", "CG", "DF", "MF", "LS", "NM", "PM"];
+
+  const $ = id => document.getElementById(id);
+  const tbody = document.querySelector("#tabla tbody");
+
+  function setStatus(msg, type="info") {
+    const el = $("status");
+    el.textContent = msg;
+    el.className = type;
+  }
+
+  function escapeHtml(str) {
+    return String(str ?? "").replace(/[&<>"']/g, s =>
+      ({ "&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#039;" }[s])
+    );
+  }
+
+  // Convierte número de Excel (46006...) o texto a fecha dd/MM/yyyy HH:mm
+  function formatearDia(valor) {
+    if (valor == null || valor === "") return "";
+
+    if (/^\d{2}\/\d{2}\/\d{4}/.test(String(valor))) {
+      // Ya viene formateado
+      return String(valor);
+    }
+
+    if (typeof valor === "number" || /^[0-9]+(\.[0-9]+)?$/.test(String(valor))) {
+      const serial = Number(valor);
+      if (!Number.isFinite(serial)) return String(valor);
+
+      const days = Math.floor(serial);
+      const frac = serial - days;
+
+      const base = new Date(1899, 11, 30); // 30/12/1899
+      base.setDate(base.getDate() + days);
+
+      const minutesTotal = Math.round(frac * 24 * 60);
+      const hours   = String(Math.floor(minutesTotal / 60)).padStart(2, "0");
+      const minutes = String(minutesTotal % 60).padStart(2, "0");
+
+      const year  = base.getFullYear();
+      const month = String(base.getMonth() + 1).padStart(2, "0");
+      const day   = String(base.getDate()).padStart(2, "0");
+
+      return `${day}/${month}/${year} ${hours}:${minutes}`;
+    }
+
+    const d = new Date(valor);
+    if (!isNaN(d.getTime())) {
+      const year  = d.getFullYear();
+      const month = String(d.getMonth() + 1).padStart(2, "0");
+      const day   = String(d.getDate()).padStart(2, "0");
+      const hours = String(d.getHours()).padStart(2, "0");
+      const mins  = String(d.getMinutes()).padStart(2, "0");
+      return `${day}/${month}/${year} ${hours}:${mins}`;
+    }
+
+    return String(valor);
+  }
+
+  async function apiPost(url, body) {
+    const res = await fetch(url, {
+      method: "POST",
+      headers: { "content-type": "application/json" },
+      body: JSON.stringify(body)
+    });
+    const text = await res.text();
+
+    let data;
+    try { data = JSON.parse(text); } catch(e) { data = text; }
+
+    if (!res.ok) throw new Error(text);
+    return data;
+  }
+
+  function crearFila(item) {
+    // item viene del Flow 2: codigo, descripción, stock1030, stock1032, dia (serial)
+    const descripcion =
+      item.descripcion ??
+      item["descripción"] ??
+      "";
+    const stock1030 =
+      item.stock1030 ??
+      item.stockJDE ??
+      item["Stock 1030"] ??
+      "";
+    const stock1032 =
+      item.stock1032 ??
+      item["Stock 1032"] ??
+      "";
+    const diaMostrar = formatearDia(item.dia);
+
+    const tr = document.createElement("tr");
+    tr.innerHTML = `
+      <td>${escapeHtml(item.codigo ?? "")}</td>
+      <td>${escapeHtml(descripcion)}</td>
+      <td>${stock1030}</td>
+      <td>${stock1032}</td>
+      <td>${escapeHtml(diaMostrar)}</td>
+      <td><input type="number" min="0" step="1" placeholder="0" /></td>
+      <td>
+        <select class="motivo-input">
+          <option value="Semanal">Semanal</option>
+          <option value="Administración">Administración</option>
+        </select>
+      </td>
+      <td><textarea placeholder="Observaciones"></textarea></td>
+    `;
+
+    // datasets que se usan al guardar
+    tr.dataset.codigo = item.codigo ?? "";
+    tr.dataset.descripcion = descripcion;
+    tr.dataset.stock1030 = stock1030 ?? 0;
+    tr.dataset.stock1032 = stock1032 ?? 0;
+    tr.dataset.dia = diaMostrar;
+
+    return tr;
+  }
+
+  function poblarResponsables() {
+    $("responsable").innerHTML = RESPONSABLES_FIJOS
+      .map(r => `<option value="${r}">${r}</option>`)
+      .join("");
+    setStatus("Seleccioná un responsable y cargá tus insumos.", "info");
+  }
+
+  // ------- CARGAR INSUMOS (Flow 2) -------
+  async function cargarPlan() {
+    const responsable = $("responsable").value;
+
+    tbody.innerHTML = "";
+    setStatus("Cargando insumos...", "info");
+    $("btnGuardar").disabled = true;
+
+    try {
+      // Flow 2 se dispara por POST con { responsable }
+      const data = await apiPost(URL_PLAN, { responsable });
+
+      let items = data.items || [];
+      // Por cómo se ve en Power Automate (items.0.0.*) puede venir como [[{...}]]
+      if (items.length && Array.isArray(items[0])) {
+        items = items[0];
+      }
+
+      if (!items.length) {
+        setStatus("No hay insumos para este responsable.", "err");
+        return;
+      }
+
+      items.forEach(i => tbody.appendChild(crearFila(i)));
+      $("btnGuardar").disabled = false;
+      setStatus(`${items.length} insumos cargados.`, "ok");
+
+    } catch (e) {
+      console.error(e);
+      setStatus("Error al cargar insumos: " + e.message, "err");
+    }
+  }
+
+  // ------- GUARDAR CONTEOS (Flow 3) -------
+  async function guardarConteos() {
+    const responsable = $("responsable").value;
+    const filas = Array.from(tbody.querySelectorAll("tr"));
+    const conteos = [];
+
+    for (const tr of filas) {
+      const fisicoStr = tr.querySelector("input[type=number]").value.trim();
+      if (!fisicoStr) continue;
+
+      const conteoFisico = Number(fisicoStr);
+      if (!Number.isFinite(conteoFisico) || conteoFisico < 0) continue;
+
+      conteos.push({
+        codigo: tr.dataset.codigo,
+        descripcion: tr.dataset.descripcion,
+        stock1030: Number(tr.dataset.stock1030 || 0),   // 👈 coincide con el JSON del trigger
+        stock1032: Number(tr.dataset.stock1032 || 0),
+        dia: tr.dataset.dia,
+        conteoFisico,
+        motivo: tr.querySelector(".motivo-input").value,
+        observaciones: tr.querySelector("textarea").value
+      });
+    }
+
+    if (!conteos.length) {
+      setStatus("No hay conteos cargados.", "err");
+      return;
+    }
+
+    setStatus("Guardando...", "info");
+    $("btnGuardar").disabled = true;
+
+    try {
+      await apiPost(URL_GUARDAR, { responsable, conteos });
+      setStatus("Conteos guardados correctamente.", "ok");
+
+      filas.forEach(tr => {
+        tr.querySelector("input[type=number]").value = "";
+        tr.querySelector("textarea").value = "";
+      });
+    } catch (e) {
+      console.error(e);
+      setStatus("Error al guardar: " + e.message, "err");
+    } finally {
+      $("btnGuardar").disabled = false;
+    }
+  }
+
+  // ------- EVENTOS -------
+  $("btnCargar").onclick = cargarPlan;
+  $("btnGuardar").onclick = guardarConteos;
+  $("btnImprimir").onclick = () => window.print();
+
+  poblarResponsables();
+</script>
+</body>
+</html>
