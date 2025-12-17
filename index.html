@@ -262,13 +262,45 @@
     }
 
     @media print {
-      body { background: #ffffff; }
-      .no-print { display: none !important; }
-      .page { margin: 0; max-width: 100%; padding: 0; }
-      .card { box-shadow: none; border-radius: 0; }
-      .table-shell { border-radius: 0; border: none; }
-      textarea { min-height: 60px; } /* más espacio para escribir a mano */
-    }
+  body { background: #ffffff; }
+  .no-print { display: none !important; }
+
+  .page {
+    margin: 0;
+    max-width: 100%;
+    padding: 0;
+  }
+
+  .card {
+    box-shadow: none;
+    border-radius: 0;
+  }
+
+  .table-shell {
+    border-radius: 0;
+    border: none;
+  }
+
+  /* CLAVE: que imprima toda la tabla, no solo lo visible */
+  .table-wrapper {
+    max-height: none !important;
+    overflow: visible !important;
+  }
+
+  /* opcional: evita headers “pegajosos” raros en print */
+  th {
+    position: static !important;
+  }
+
+  /* opcional: evitar que corte una fila a la mitad */
+  tr {
+    break-inside: avoid;
+    page-break-inside: avoid;
+  }
+
+  textarea { min-height: 60px; }
+}
+
   </style>
 </head>
 
