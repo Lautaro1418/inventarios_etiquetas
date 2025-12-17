@@ -113,11 +113,7 @@
     #btnGuardar { background: #16a34a; color: #ffffff; }
     #btnImprimir { background: #6b7280; color: #ffffff; }
 
-    button:disabled {
-      opacity: 0.55;
-      cursor: not-allowed;
-      box-shadow: none;
-    }
+    button:disabled { opacity: 0.55; cursor: not-allowed; box-shadow: none; }
 
     #status {
       font-size: 13px;
@@ -147,11 +143,7 @@
     #status.err .status-dot { background: #ef4444; }
     #status.info .status-dot { background: #9ca3af; }
 
-    .hint {
-      font-size: 11px;
-      color: #6b7280;
-      margin-top: 2px;
-    }
+    .hint { font-size: 11px; color: #6b7280; margin-top: 2px; }
 
     .table-shell {
       margin-top: 12px;
@@ -161,10 +153,7 @@
       background: #ffffff;
     }
 
-    .table-wrapper {
-      max-height: 60vh;
-      overflow: auto;
-    }
+    .table-wrapper { max-height: 60vh; overflow: auto; }
 
     table {
       width: 100%;
@@ -182,10 +171,7 @@
       background-clip: padding-box;
     }
 
-    thead th:last-child,
-    tbody td:last-child {
-      border-right: none;
-    }
+    thead th:last-child, tbody td:last-child { border-right: none; }
 
     th {
       position: sticky;
@@ -202,16 +188,20 @@
     tbody tr:nth-child(even) td { background: #f9fafb; }
     tbody tr:hover td { background: #eef2ff; }
 
-    #tabla td:first-child {
+    /* Código/IFR sin wrap */
+    td.col-codigo {
       white-space: nowrap;
       word-break: normal;
       font-variant-numeric: tabular-nums;
     }
 
-    input[type="number"] {
-      width: 100%;
-      text-align: right;
+    /* Descripción puede wrapear */
+    td.col-desc {
+      white-space: normal;
+      word-break: break-word;
     }
+
+    input[type="number"] { width: 100%; text-align: right; }
 
     .motivo-input {
       width: 100%;
@@ -243,27 +233,12 @@
       background: #f9fafb;
     }
 
-    .summary strong {
-      font-weight: 700;
-      color: #111827;
-    }
+    .summary strong { font-weight: 700; color: #111827; }
 
     @media (max-width: 768px) {
-      .header {
-        flex-direction: column;
-        align-items: flex-start;
-      }
-
-      .toolbar {
-        flex-direction: column;
-        align-items: stretch;
-      }
-
-      button {
-        justify-content: center;
-        width: 100%;
-      }
-
+      .header { flex-direction: column; align-items: flex-start; }
+      .toolbar { flex-direction: column; align-items: stretch; }
+      button { justify-content: center; width: 100%; }
       #status { min-width: unset; }
     }
 
@@ -274,18 +249,11 @@
       .card { box-shadow: none; border-radius: 0; }
       .table-shell { border-radius: 0; border: none; }
 
-      .table-wrapper {
-        max-height: none !important;
-        overflow: visible !important;
-      }
-
+      /* imprimir toda la tabla, no solo lo visible */
+      .table-wrapper { max-height: none !important; overflow: visible !important; }
       th { position: static !important; }
 
-      tr {
-        break-inside: avoid;
-        page-break-inside: avoid;
-      }
-
+      tr { break-inside: avoid; page-break-inside: avoid; }
       textarea { height: 60px; min-height: 60px; }
     }
   </style>
@@ -298,9 +266,7 @@
         <div class="title-block">
           <h1>Inventario Etiquetas</h1>
         </div>
-        <div class="badge">
-          Paso 1: cargar listado · Paso 2: contar · Paso 3: guardar
-        </div>
+        <div class="badge">Paso 1: cargar listado · Paso 2: contar · Paso 3: guardar</div>
       </div>
 
       <div class="toolbar no-print">
@@ -313,15 +279,9 @@
         <div class="toolbar-group">
           <label>&nbsp;</label>
           <div style="display:flex; gap:8px; flex-wrap:wrap;">
-            <button id="btnCargar">
-              <span class="icon">📥</span><span>Cargar mis insumos</span>
-            </button>
-            <button id="btnGuardar" disabled>
-              <span class="icon">💾</span><span>Guardar conteos</span>
-            </button>
-            <button id="btnImprimir">
-              <span class="icon">🖨️</span><span>Imprimir listado</span>
-            </button>
+            <button id="btnCargar"><span class="icon">📥</span><span>Cargar mis insumos</span></button>
+            <button id="btnGuardar" disabled><span class="icon">💾</span><span>Guardar conteos</span></button>
+            <button id="btnImprimir"><span class="icon">🖨️</span><span>Imprimir listado</span></button>
           </div>
         </div>
 
@@ -335,15 +295,15 @@
         <div class="table-wrapper">
           <table id="tabla">
             <colgroup>
-              <col style="width: 170px;">
-              <col>
-              <col style="width: 110px;">
-              <col style="width: 110px;">
-              <col style="width: 140px;">
-              <col style="width: 140px;">
-              <col style="width: 120px;">
-              <col style="width: 150px;">
-              <col style="width: 260px;">
+              <col style="width: 170px;">  <!-- Código -->
+              <col>                        <!-- Descripción -->
+              <col style="width: 110px;">  <!-- Stock 1030 -->
+              <col style="width: 110px;">  <!-- Stock 1032 -->
+              <col style="width: 140px;">  <!-- Día stock -->
+              <col style="width: 140px;">  <!-- Stock 1030 ACTUAL -->
+              <col style="width: 120px;">  <!-- Conteo físico -->
+              <col style="width: 150px;">  <!-- Motivo -->
+              <col style="width: 260px;">  <!-- Observaciones -->
             </colgroup>
 
             <thead>
@@ -375,6 +335,7 @@
   </div>
 
 <script>
+  // ====== CONFIGURACIÓN: URLs de tus Flows ======
   const URL_PLAN =
     "https://defaultd83e43d1620044fbb4f6a908d91c2e.22.environment.api.powerplatform.com:443/powerautomate/automations/direct/workflows/59b0d1d8c50c4277b875cb90c744d925/triggers/manual/paths/invoke?api-version=1&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=nTWG-VHLTpxBq_lVT8BwliveH9lxEFEcFhRisJDhd_g";
 
@@ -386,6 +347,7 @@
   const $ = id => document.getElementById(id);
   const tbody = document.querySelector("#tabla tbody");
 
+  // Motivo único (solo select en primera fila)
   let motivoGlobal = "Semanal";
 
   function setStatus(msg, type = "info") {
@@ -401,6 +363,7 @@
     );
   }
 
+  // Convierte número de Excel o ISO a "dd/MM/yyyy HH:mm"
   function formatearDia(valor) {
     if (valor == null || valor === "") return "";
 
@@ -473,11 +436,33 @@
     tbody.querySelectorAll('input[data-role="motivo-readonly"]').forEach(inp => inp.value = motivoGlobal);
   }
 
+  function getFirstExisting(obj, keys) {
+    for (const k of keys) {
+      if (obj && obj[k] != null && obj[k] !== "") return obj[k];
+    }
+    return "";
+  }
+
+  function looksLikeText(v) {
+    return typeof v === "string" && /[A-Za-zÁÉÍÓÚÜÑáéíóúüñ]/.test(v);
+  }
+
   function crearFila(item, idx) {
-    const descripcion = item.descripcion ?? item["descripción"] ?? "";
-    const stock1030 = item.stock1030 ?? item.stockJDE ?? item["Stock 1030"] ?? "";
-    const stock1032 = item.stock1032 ?? item["Stock 1032"] ?? "";
-    const diaMostrar = formatearDia(item.dia);
+    const codigo = getFirstExisting(item, ["codigo","Código","CODIGO","Code"]);
+    let descripcion = getFirstExisting(item, [
+      "descripcion","descripción","Descripcion","Descripción","DESCRIPCION","DESCRIPCIÓN",
+      "desc","Desc","DESCRIPCION_ITEM","DescripcionItem"
+    ]);
+
+    let stock1030 = getFirstExisting(item, ["stock1030","Stock1030","STOCK1030","Stock 1030","stock_1030","stockJDE"]);
+    const stock1032 = getFirstExisting(item, ["stock1032","Stock1032","STOCK1032","Stock 1032","stock_1032"]);
+    const diaMostrar = formatearDia(getFirstExisting(item, ["dia","DIA","fecha","Fecha","DIA_STOCK","Dia stock"]));
+
+    // Si por algún motivo el Flow metió texto en stock1030 y descripción vino vacía:
+    if (!descripcion && looksLikeText(stock1030)) {
+      descripcion = stock1030;
+      stock1030 = getFirstExisting(item, ["cantidad","Cantidad","cant","Stock1030Num","stock1030Num"]) || "";
+    }
 
     const tr = document.createElement("tr");
 
@@ -490,22 +475,20 @@
       : `<input class="motivo-input" data-role="motivo-readonly" type="text" readonly value="${escapeHtml(motivoGlobal)}" />`;
 
     tr.innerHTML = `
-      <td>${escapeHtml(item.codigo ?? "")}</td>
-      <td>${escapeHtml(descripcion)}</td>
+      <td class="col-codigo">${escapeHtml(codigo)}</td>
+      <td class="col-desc">${escapeHtml(descripcion)}</td>
       <td style="text-align:right;">${escapeHtml(stock1030)}</td>
       <td style="text-align:right;">${escapeHtml(stock1032)}</td>
       <td>${escapeHtml(diaMostrar)}</td>
 
       <td><input type="number" min="0" step="1" placeholder="" data-field="stock1030_actual" /></td>
-
       <td><input type="number" min="0" step="1" placeholder="" data-field="conteo" /></td>
 
       <td>${motivoCell}</td>
-
       <td><textarea placeholder=""></textarea></td>
     `;
 
-    tr.dataset.codigo = item.codigo ?? "";
+    tr.dataset.codigo = codigo;
     tr.dataset.descripcion = descripcion;
     tr.dataset.stock1030 = stock1030 ?? 0;
     tr.dataset.stock1032 = stock1032 ?? 0;
@@ -539,7 +522,6 @@
     try {
       const data = await apiPost(URL_PLAN, { responsable });
       let items = data.items || [];
-
       if (items.length && Array.isArray(items[0])) items = items[0];
 
       if (!items.length) {
