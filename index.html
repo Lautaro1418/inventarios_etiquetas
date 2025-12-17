@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Formulario de conteo físico</title>
+  <title>Inventario Etiquetas</title>
 
   <style>
     * { box-sizing: border-box; }
@@ -179,14 +179,25 @@
 
     table {
       width: 100%;
-      border-collapse: collapse;
+      border-collapse: separate;     /* para divisiones tipo Excel */
+      border-spacing: 0;
       font-size: 13px;
     }
 
     th, td {
-      padding: 8px 6px;
+      padding: 8px 8px;
       border-bottom: 1px solid #e5e7eb;
       vertical-align: top;
+      background-clip: padding-box;
+    }
+
+    /* divisiones discretas entre columnas (estilo Excel) */
+    th, td {
+      border-right: 1px solid #edf2f7;
+    }
+    thead th:last-child,
+    tbody td:last-child {
+      border-right: none;
     }
 
     th {
@@ -200,30 +211,19 @@
       color: #4b5563;
     }
 
-    tbody tr:nth-child(odd) {
-      background: #ffffff;
-    }
-
-    tbody tr:nth-child(even) {
-      background: #f9fafb;
-    }
-
-    tbody tr:hover {
-      background: #eef2ff;
-    }
+    tbody tr:nth-child(odd)  td { background: #ffffff; }
+    tbody tr:nth-child(even) td { background: #f9fafb; }
+    tbody tr:hover td { background: #eef2ff; }
 
     input[type="number"] {
       width: 100%;
+      text-align: right;
     }
 
     textarea {
       width: 100%;
       min-height: 36px;
       resize: vertical;
-    }
-
-    .motivo-input {
-      width: 100%;
     }
 
     .summary {
@@ -262,25 +262,12 @@
     }
 
     @media print {
-      body {
-        background: #ffffff;
-      }
-      .no-print {
-        display: none !important;
-      }
-      .page {
-        margin: 0;
-        max-width: 100%;
-        padding: 0;
-      }
-      .card {
-        box-shadow: none;
-        border-radius: 0;
-      }
-      .table-shell {
-        border-radius: 0;
-        border: none;
-      }
+      body { background: #ffffff; }
+      .no-print { display: none !important; }
+      .page { margin: 0; max-width: 100%; padding: 0; }
+      .card { box-shadow: none; border-radius: 0; }
+      .table-shell { border-radius: 0; border: none; }
+      textarea { min-height: 60px; } /* más espacio para escribir a mano */
     }
   </style>
 </head>
@@ -290,11 +277,8 @@
     <div class="card">
       <div class="header no-print">
         <div class="title-block">
-          <h1>Formulario de conteo físico</h1>
-          <p class="sub">
-            La web lee de <strong>CARGA DE DATOS N+2</strong> y escribe en
-            <strong>REGISTRO CONTEO</strong> (BDD REGISTRO CONTEOS).
-          </p>
+          <h1>Inventario Etiquetas</h1>
+          <!-- (sacado el texto que no querías) -->
         </div>
         <div class="badge">
           Paso 1: cargar listado · Paso 2: contar · Paso 3: guardar
@@ -342,6 +326,10 @@
                 <th>Stock 1030</th>
                 <th>Stock 1032</th>
                 <th>Día stock</th>
+
+                <!-- NUEVO -->
+                <th>Stock 1030 ACTUAL</th>
+
                 <th>Conteo físico</th>
                 <th>Motivo</th>
                 <th>Observaciones</th>
@@ -376,6 +364,9 @@
 
   const $ = id => document.getElementById(id);
   const tbody = document.querySelector("#tabla tbody");
+
+  // Motivo único (solo select en primera fila)
+  let motivoGlobal = "Semanal";
 
   function setStatus(msg, type = "info") {
     const el = $("status");
@@ -455,15 +446,27 @@
     const filas = Array.from(tbody.querySelectorAll("tr"));
     const total = filas.length;
     let completados = 0;
+
     filas.forEach(tr => {
-      const v = tr.querySelector('input[type="number"]').value.trim();
+      const v = tr.querySelector('input[data-field="conteo"]').value.trim();
       if (v !== "") completados++;
     });
+
     $("totalInsumos").textContent = total;
     $("totalCompletados").textContent = completados;
   }
 
-  function crearFila(item) {
+  function aplicarMotivoATodasLasFilas(nuevoMotivo) {
+    motivoGlobal = nuevoMotivo;
+    tbody.querySelectorAll('select[data-role="motivo-row"]').forEach(sel => {
+      sel.value = motivoGlobal;
+    });
+    tbody.querySelectorAll('input[data-role="motivo-readonly"]').forEach(inp => {
+      inp.value = motivoGlobal;
+    });
+  }
+
+  function crearFila(item, idx) {
     const descripcion =
       item.descripcion ??
       item["descripción"] ??
@@ -480,20 +483,40 @@
     const diaMostrar = formatearDia(item.dia);
 
     const tr = document.createElement("tr");
-    tr.innerHTML = `
-      <td>${escapeHtml(item.codigo ?? "")}</td>
-      <td>${escapeHtml(descripcion)}</td>
-      <td>${stock1030}</td>
-      <td>${stock1032}</td>
-      <td>${escapeHtml(diaMostrar)}</td>
-      <td><input type="number" min="0" step="1" placeholder="0" /></td>
-      <td>
-        <select class="motivo-input">
+
+    // Motivo: SOLO select en la primera fila. Las demás readonly.
+    const motivoCell = (idx === 0)
+      ? `
+        <select class="motivo-input" data-role="motivo-row">
           <option value="Semanal">Semanal</option>
           <option value="Administración">Administración</option>
         </select>
+      `
+      : `
+        <input class="motivo-input" data-role="motivo-readonly" type="text" readonly value="${escapeHtml(motivoGlobal)}" />
+      `;
+
+    tr.innerHTML = `
+      <td>${escapeHtml(item.codigo ?? "")}</td>
+      <td>${escapeHtml(descripcion)}</td>
+      <td style="text-align:right;">${escapeHtml(stock1030)}</td>
+      <td style="text-align:right;">${escapeHtml(stock1032)}</td>
+      <td>${escapeHtml(diaMostrar)}</td>
+
+      <!-- NUEVO: Stock 1030 ACTUAL (vacío por defecto) -->
+      <td>
+        <input type="number" min="0" step="1" placeholder="" data-field="stock1030_actual" />
       </td>
-      <td><textarea placeholder="Observaciones (opcional)"></textarea></td>
+
+      <!-- Conteo físico: vacío por defecto (sin 0) -->
+      <td>
+        <input type="number" min="0" step="1" placeholder="" data-field="conteo" />
+      </td>
+
+      <td>${motivoCell}</td>
+
+      <!-- Observaciones: vacío (sin placeholder que ocupe lugar en impresión) -->
+      <td><textarea placeholder=""></textarea></td>
     `;
 
     tr.dataset.codigo = item.codigo ?? "";
@@ -503,7 +526,17 @@
     tr.dataset.dia = diaMostrar;
 
     // Recalcular resumen cuando se escriba un conteo
-    tr.querySelector('input[type="number"]').addEventListener("input", actualizarResumen);
+    tr.querySelector('input[data-field="conteo"]').addEventListener("input", actualizarResumen);
+
+    // Si cambian el motivo en la primera fila, se propaga
+    if (idx === 0) {
+      const sel = tr.querySelector('select[data-role="motivo-row"]');
+      sel.value = motivoGlobal;
+      sel.addEventListener("change", () => aplicarMotivoATodasLasFilas(sel.value));
+    }
+
+    // Asegura que las filas readonly reflejen el global al crearlas
+    setTimeout(() => aplicarMotivoATodasLasFilas(motivoGlobal), 0);
 
     return tr;
   }
@@ -536,7 +569,11 @@
         return;
       }
 
-      items.forEach(i => tbody.appendChild(crearFila(i)));
+      items.forEach((i, idx) => tbody.appendChild(crearFila(i, idx)));
+
+      // aplicar motivo global una vez cargado
+      aplicarMotivoATodasLasFilas(motivoGlobal);
+
       $("btnGuardar").disabled = false;
       actualizarResumen();
       setStatus(`${items.length} insumos cargados. Completá los conteos y luego guardá.`, "ok");
@@ -552,20 +589,31 @@
     const conteos = [];
 
     for (const tr of filas) {
-      const fisicoStr = tr.querySelector('input[type="number"]').value.trim();
+      const fisicoStr = tr.querySelector('input[data-field="conteo"]').value.trim();
       if (fisicoStr === "") continue;
 
       const conteoFisico = Number(fisicoStr);
       if (!Number.isFinite(conteoFisico) || conteoFisico < 0) continue;
 
+      // NUEVO: Stock 1030 ACTUAL si está cargado; si no, usar el original
+      const stockActualStr = tr.querySelector('input[data-field="stock1030_actual"]').value.trim();
+      const stock1030Original = Number(tr.dataset.stock1030 || 0);
+
+      let stock1030Final = stock1030Original;
+      if (stockActualStr !== "") {
+        const n = Number(stockActualStr);
+        if (Number.isFinite(n) && n >= 0) stock1030Final = n;
+      }
+
       conteos.push({
         codigo: tr.dataset.codigo,
         descripcion: tr.dataset.descripcion,
-        stock1030: Number(tr.dataset.stock1030 || 0),
+        stock1030: stock1030Final,                 // <-- se devuelve el final
+        stock1030Original: stock1030Original,       // (extra útil por auditoría; podés borrarlo si no querés)
         stock1032: Number(tr.dataset.stock1032 || 0),
         dia: tr.dataset.dia,
         conteoFisico,
-        motivo: tr.querySelector(".motivo-input").value,
+        motivo: motivoGlobal,                      // motivo único
         observaciones: tr.querySelector("textarea").value
       });
     }
@@ -580,8 +628,7 @@
 
     try {
       await apiPost(URL_GUARDAR, { responsable, conteos });
-      setStatus("Conteos guardados correctamente en REGISTRO CONTEO.", "ok");
-      // No borro los valores, por si quieren ver lo que hicieron
+      setStatus("Conteos guardados correctamente.", "ok");
     } catch (e) {
       console.error(e);
       setStatus("Error al guardar conteos: " + e.message, "err");
