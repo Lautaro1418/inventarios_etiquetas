@@ -211,7 +211,7 @@
 
     /* ===== PRINT FIX (evita superposición) ===== */
     @media print {
-      @page { size: A4 landscape; margin: 10mm; } /* paisaje para que entren columnas */
+      @page { size: A4 landscape; margin: 5mm; } /* paisaje para que entren columnas */
 
       body { background: #ffffff; }
       .no-print { display: none !important; }
@@ -220,8 +220,11 @@
       .table-shell { border-radius: 0; border: none; }
 
       /* imprimir toda la tabla */
-      .table-wrapper { max-height: none !important; overflow: visible !important; }
-
+      .table-wrapper{
+    max-height: none !important;
+    height: auto !important;
+    overflow: visible !important;
+  }
       /* sin sticky en print */
       th { position: static !important; }
 
