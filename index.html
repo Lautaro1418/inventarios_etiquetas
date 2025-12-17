@@ -15,18 +15,12 @@
       color: #111827;
     }
 
-    .page {
-      max-width: 1200px;
-      margin: 24px auto 40px;
-      padding: 0 16px;
-    }
+    .page { max-width: 1200px; margin: 24px auto 40px; padding: 0 16px; }
 
     .card {
       background: #ffffff;
       border-radius: 14px;
-      box-shadow:
-        0 10px 15px -3px rgba(0,0,0,.08),
-        0 4px 6px -4px rgba(0,0,0,.05);
+      box-shadow: 0 10px 15px -3px rgba(0,0,0,.08), 0 4px 6px -4px rgba(0,0,0,.05);
       padding: 18px;
     }
 
@@ -38,11 +32,7 @@
       margin-bottom: 14px;
     }
 
-    .title-block h1 {
-      margin: 0;
-      font-size: 24px;
-      font-weight: 700;
-    }
+    .title-block h1 { margin: 0; font-size: 24px; font-weight: 700; }
 
     .badge {
       padding: 4px 10px;
@@ -67,17 +57,9 @@
       border: 1px solid #e5e7eb;
     }
 
-    .toolbar-group {
-      display: flex;
-      flex-direction: column;
-      gap: 4px;
-    }
+    .toolbar-group { display: flex; flex-direction: column; gap: 4px; }
 
-    label {
-      font-size: 12px;
-      font-weight: 600;
-      color: #4b5563;
-    }
+    label { font-size: 12px; font-weight: 600; color: #4b5563; }
 
     select, input, textarea, button {
       font-size: 14px;
@@ -89,9 +71,7 @@
       background: #fff;
     }
 
-    select:focus,
-    input:focus,
-    textarea:focus {
+    select:focus, input:focus, textarea:focus {
       border-color: #2563eb;
       box-shadow: 0 0 0 1px rgba(37, 99, 235, 0.25);
     }
@@ -107,13 +87,12 @@
       white-space: nowrap;
     }
 
-    button span.icon { font-size: 14px; }
-
-    #btnCargar { background: #2563eb; color: #ffffff; }
+    #btnCargar  { background: #2563eb; color: #ffffff; }
     #btnGuardar { background: #16a34a; color: #ffffff; }
-    #btnImprimir { background: #6b7280; color: #ffffff; }
+    #btnImprimir{ background: #6b7280; color: #ffffff; }
+    button:disabled { opacity: 0.55; cursor: not-allowed; }
 
-    button:disabled { opacity: 0.55; cursor: not-allowed; box-shadow: none; }
+    .hint { font-size: 11px; color: #6b7280; margin-top: 2px; }
 
     #status {
       font-size: 13px;
@@ -126,24 +105,10 @@
       min-width: 220px;
     }
 
-    .status-dot {
-      width: 8px;
-      height: 8px;
-      border-radius: 999px;
-      display: inline-block;
-      background: #9ca3af;
-      flex: 0 0 auto;
-    }
-
-    #status.ok { color: #16a34a; }
-    #status.err { color: #b91c1c; }
-    #status.info { color: #4b5563; }
-
-    #status.ok .status-dot { background: #22c55e; }
-    #status.err .status-dot { background: #ef4444; }
-    #status.info .status-dot { background: #9ca3af; }
-
-    .hint { font-size: 11px; color: #6b7280; margin-top: 2px; }
+    .status-dot { width: 8px; height: 8px; border-radius: 999px; background: #9ca3af; }
+    #status.ok { color: #16a34a; }   #status.ok .status-dot { background: #22c55e; }
+    #status.err{ color: #b91c1c; }   #status.err .status-dot{ background: #ef4444; }
+    #status.info{color:#4b5563;}     #status.info .status-dot{ background:#9ca3af; }
 
     .table-shell {
       margin-top: 12px;
@@ -160,13 +125,13 @@
       border-collapse: separate;
       border-spacing: 0;
       font-size: 13px;
-      table-layout: fixed;
+      table-layout: fixed; /* clave para respetar colgroup */
     }
 
     th, td {
       padding: 8px 8px;
       border-bottom: 1px solid #d1d5db;
-      border-right: 1px solid #cbd5e1;
+      border-right: 1px solid #94a3b8; /* líneas más notables entre columnas */
       vertical-align: top;
       background-clip: padding-box;
     }
@@ -180,25 +145,27 @@
       background: #f9fafb;
       text-align: left;
       font-size: 12px;
-      font-weight: 600;
-      color: #374151;
+      font-weight: 700;
+      color: #1f2937;
+      border-bottom: 2px solid #94a3b8; /* header más “excel” */
     }
 
     tbody tr:nth-child(odd)  td { background: #ffffff; }
     tbody tr:nth-child(even) td { background: #f9fafb; }
-    tbody tr:hover td { background: #eef2ff; }
 
-    /* Código/IFR sin wrap */
+    /* Código: NO wrap */
     td.col-codigo {
       white-space: nowrap;
       word-break: normal;
       font-variant-numeric: tabular-nums;
     }
 
-    /* Descripción puede wrapear */
+    /* Descripción: puede wrapear y texto un toque más chico */
     td.col-desc {
       white-space: normal;
       word-break: break-word;
+      font-size: 12px;
+      line-height: 1.25;
     }
 
     input[type="number"] { width: 100%; text-align: right; }
@@ -212,8 +179,8 @@
 
     textarea {
       width: 100%;
-      height: 30px;
-      min-height: 30px;
+      height: 28px;      /* más bajo por defecto */
+      min-height: 28px;
       resize: vertical;
       padding: 6px 8px;
       font-size: 13px;
@@ -242,19 +209,29 @@
       #status { min-width: unset; }
     }
 
+    /* ===== PRINT FIX (evita superposición) ===== */
     @media print {
+      @page { size: A4 landscape; margin: 10mm; } /* paisaje para que entren columnas */
+
       body { background: #ffffff; }
       .no-print { display: none !important; }
       .page { margin: 0; max-width: 100%; padding: 0; }
-      .card { box-shadow: none; border-radius: 0; }
+      .card { box-shadow: none; border-radius: 0; padding: 0; }
       .table-shell { border-radius: 0; border: none; }
 
-      /* imprimir toda la tabla, no solo lo visible */
+      /* imprimir toda la tabla */
       .table-wrapper { max-height: none !important; overflow: visible !important; }
+
+      /* sin sticky en print */
       th { position: static !important; }
 
+      /* reduce tamaño para que no “pise” */
+      table { font-size: 10px; table-layout: fixed; }
+      th, td { padding: 5px 6px; }
+
       tr { break-inside: avoid; page-break-inside: avoid; }
-      textarea { height: 60px; min-height: 60px; }
+
+      textarea { height: 40px; min-height: 40px; }
     }
   </style>
 </head>
@@ -263,9 +240,7 @@
   <div class="page">
     <div class="card">
       <div class="header no-print">
-        <div class="title-block">
-          <h1>Inventario Etiquetas</h1>
-        </div>
+        <div class="title-block"><h1>Inventario Etiquetas</h1></div>
         <div class="badge">Paso 1: cargar listado · Paso 2: contar · Paso 3: guardar</div>
       </div>
 
@@ -279,31 +254,31 @@
         <div class="toolbar-group">
           <label>&nbsp;</label>
           <div style="display:flex; gap:8px; flex-wrap:wrap;">
-            <button id="btnCargar"><span class="icon">📥</span><span>Cargar mis insumos</span></button>
-            <button id="btnGuardar" disabled><span class="icon">💾</span><span>Guardar conteos</span></button>
-            <button id="btnImprimir"><span class="icon">🖨️</span><span>Imprimir listado</span></button>
+            <button id="btnCargar">📥 Cargar mis insumos</button>
+            <button id="btnGuardar" disabled>💾 Guardar conteos</button>
+            <button id="btnImprimir">🖨️ Imprimir listado</button>
           </div>
         </div>
 
         <div id="status" class="info">
-          <span class="status-dot"></span>
-          <span>Preparado para empezar.</span>
+          <span class="status-dot"></span><span>Preparado para empezar.</span>
         </div>
       </div>
 
       <div class="table-shell">
         <div class="table-wrapper">
           <table id="tabla">
+            <!-- IMPORTANTE: 9 COLS, igual que TH y TD -->
             <colgroup>
               <col style="width: 170px;">  <!-- Código -->
-              <col>                        <!-- Descripción -->
+              <col style="width: 320px;">  <!-- Descripción -->
               <col style="width: 110px;">  <!-- Stock 1030 -->
               <col style="width: 110px;">  <!-- Stock 1032 -->
               <col style="width: 140px;">  <!-- Día stock -->
               <col style="width: 140px;">  <!-- Stock 1030 ACTUAL -->
               <col style="width: 120px;">  <!-- Conteo físico -->
-              <col style="width: 150px;">  <!-- Motivo -->
-              <col style="width: 260px;">  <!-- Observaciones -->
+              <col style="width: 140px;">  <!-- Motivo -->
+              <col style="width: 240px;">  <!-- Observaciones -->
             </colgroup>
 
             <thead>
@@ -319,6 +294,7 @@
                 <th>Observaciones</th>
               </tr>
             </thead>
+
             <tbody></tbody>
           </table>
         </div>
@@ -335,7 +311,6 @@
   </div>
 
 <script>
-  // ====== CONFIGURACIÓN: URLs de tus Flows ======
   const URL_PLAN =
     "https://defaultd83e43d1620044fbb4f6a908d91c2e.22.environment.api.powerplatform.com:443/powerautomate/automations/direct/workflows/59b0d1d8c50c4277b875cb90c744d925/triggers/manual/paths/invoke?api-version=1&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=nTWG-VHLTpxBq_lVT8BwliveH9lxEFEcFhRisJDhd_g";
 
@@ -347,7 +322,6 @@
   const $ = id => document.getElementById(id);
   const tbody = document.querySelector("#tabla tbody");
 
-  // Motivo único (solo select en primera fila)
   let motivoGlobal = "Semanal";
 
   function setStatus(msg, type = "info") {
@@ -363,7 +337,6 @@
     );
   }
 
-  // Convierte número de Excel o ISO a "dd/MM/yyyy HH:mm"
   function formatearDia(valor) {
     if (valor == null || valor === "") return "";
 
@@ -418,15 +391,13 @@
 
   function actualizarResumen() {
     const filas = Array.from(tbody.querySelectorAll("tr"));
-    const total = filas.length;
-    let completados = 0;
+    $("totalInsumos").textContent = filas.length;
 
+    let completados = 0;
     filas.forEach(tr => {
       const v = tr.querySelector('input[data-field="conteo"]').value.trim();
       if (v !== "") completados++;
     });
-
-    $("totalInsumos").textContent = total;
     $("totalCompletados").textContent = completados;
   }
 
@@ -443,26 +414,17 @@
     return "";
   }
 
-  function looksLikeText(v) {
-    return typeof v === "string" && /[A-Za-zÁÉÍÓÚÜÑáéíóúüñ]/.test(v);
-  }
-
   function crearFila(item, idx) {
     const codigo = getFirstExisting(item, ["codigo","Código","CODIGO","Code"]);
-    let descripcion = getFirstExisting(item, [
+
+    const descripcion = getFirstExisting(item, [
       "descripcion","descripción","Descripcion","Descripción","DESCRIPCION","DESCRIPCIÓN",
-      "desc","Desc","DESCRIPCION_ITEM","DescripcionItem"
+      "desc","Desc"
     ]);
 
-    let stock1030 = getFirstExisting(item, ["stock1030","Stock1030","STOCK1030","Stock 1030","stock_1030","stockJDE"]);
-    const stock1032 = getFirstExisting(item, ["stock1032","Stock1032","STOCK1032","Stock 1032","stock_1032"]);
-    const diaMostrar = formatearDia(getFirstExisting(item, ["dia","DIA","fecha","Fecha","DIA_STOCK","Dia stock"]));
-
-    // Si por algún motivo el Flow metió texto en stock1030 y descripción vino vacía:
-    if (!descripcion && looksLikeText(stock1030)) {
-      descripcion = stock1030;
-      stock1030 = getFirstExisting(item, ["cantidad","Cantidad","cant","Stock1030Num","stock1030Num"]) || "";
-    }
+    const stock1030 = getFirstExisting(item, ["stock1030","Stock1030","STOCK1030","Stock 1030","stockJDE"]);
+    const stock1032 = getFirstExisting(item, ["stock1032","Stock1032","STOCK1032","Stock 1032"]);
+    const diaMostrar = formatearDia(getFirstExisting(item, ["dia","DIA","fecha","Fecha","Dia stock","Día stock"]));
 
     const tr = document.createElement("tr");
 
@@ -474,16 +436,15 @@
         </select>`
       : `<input class="motivo-input" data-role="motivo-readonly" type="text" readonly value="${escapeHtml(motivoGlobal)}" />`;
 
+    // IMPORTANTE: 9 TD, mismo orden que TH/colgroup
     tr.innerHTML = `
       <td class="col-codigo">${escapeHtml(codigo)}</td>
       <td class="col-desc">${escapeHtml(descripcion)}</td>
       <td style="text-align:right;">${escapeHtml(stock1030)}</td>
       <td style="text-align:right;">${escapeHtml(stock1032)}</td>
       <td>${escapeHtml(diaMostrar)}</td>
-
       <td><input type="number" min="0" step="1" placeholder="" data-field="stock1030_actual" /></td>
       <td><input type="number" min="0" step="1" placeholder="" data-field="conteo" /></td>
-
       <td>${motivoCell}</td>
       <td><textarea placeholder=""></textarea></td>
     `;
@@ -506,9 +467,7 @@
   }
 
   function poblarResponsables() {
-    $("responsable").innerHTML = RESPONSABLES_FIJOS
-      .map(r => `<option value="${r}">${r}</option>`)
-      .join("");
+    $("responsable").innerHTML = RESPONSABLES_FIJOS.map(r => `<option value="${r}">${r}</option>`).join("");
     setStatus("Seleccioná un responsable y hacé clic en «Cargar mis insumos».", "info");
   }
 
@@ -566,7 +525,7 @@
         codigo: tr.dataset.codigo,
         descripcion: tr.dataset.descripcion,
         stock1030: stock1030Final,
-        stock1030Original: stock1030Original,
+        stock1030Original,
         stock1032: Number(tr.dataset.stock1032 || 0),
         dia: tr.dataset.dia,
         conteoFisico,
