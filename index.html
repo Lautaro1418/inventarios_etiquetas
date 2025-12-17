@@ -9,8 +9,8 @@
     * { box-sizing: border-box; }
 
     body {
-      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Arial, sans-serif;
       margin: 0;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Arial, sans-serif;
       background: #f3f4f6;
       color: #111827;
     }
@@ -23,29 +23,30 @@
 
     .card {
       background: #ffffff;
-      border-radius: 12px;
+      border-radius: 14px;
       box-shadow:
         0 10px 15px -3px rgba(0,0,0,.08),
         0 4px 6px -4px rgba(0,0,0,.05);
-      padding: 20px 20px 16px;
+      padding: 18px;
     }
 
+    /* ===== HEADER ===== */
     .header {
       display: flex;
       justify-content: space-between;
       align-items: flex-start;
       gap: 12px;
-      margin-bottom: 16px;
+      margin-bottom: 14px;
     }
 
-    .title-block h1 {
-      margin: 0 0 4px;
+    .header h1 {
+      margin: 0;
       font-size: 24px;
       font-weight: 700;
     }
 
     .badge {
-      padding: 4px 8px;
+      padding: 4px 10px;
       border-radius: 999px;
       font-size: 11px;
       font-weight: 600;
@@ -55,13 +56,14 @@
       white-space: nowrap;
     }
 
+    /* ===== TOOLBAR ===== */
     .toolbar {
       display: flex;
       flex-wrap: wrap;
       gap: 12px;
       align-items: center;
-      margin-bottom: 12px;
       padding: 10px 12px;
+      margin-bottom: 12px;
       border-radius: 10px;
       background: #f9fafb;
       border: 1px solid #e5e7eb;
@@ -83,9 +85,8 @@
       font-size: 14px;
       border-radius: 8px;
       border: 1px solid #d1d5db;
-      padding: 7px 10px;
+      padding: 6px 10px;
       outline: none;
-      transition: border-color 0.15s ease, box-shadow 0.15s ease;
       background: #fff;
     }
 
@@ -107,39 +108,20 @@
       white-space: nowrap;
     }
 
-    button span.icon {
-      font-size: 14px;
-    }
-
-    #btnCargar {
-      background: #2563eb;
-      color: #ffffff;
-    }
-
-    #btnGuardar {
-      background: #16a34a;
-      color: #ffffff;
-    }
-
-    #btnImprimir {
-      background: #6b7280;
-      color: #ffffff;
-    }
+    #btnCargar { background: #2563eb; color: #fff; }
+    #btnGuardar { background: #16a34a; color: #fff; }
+    #btnImprimir { background: #6b7280; color: #fff; }
 
     button:disabled {
-      opacity: 0.55;
+      opacity: .55;
       cursor: not-allowed;
-      box-shadow: none;
     }
 
     #status {
       font-size: 13px;
       min-height: 18px;
+      color: #4b5563;
     }
-
-    #status.ok   { color: #16a34a; }
-    #status.err  { color: #b91c1c; }
-    #status.info { color: #4b5563; }
 
     .status-dot {
       width: 8px;
@@ -149,16 +131,11 @@
       margin-right: 6px;
       background: #9ca3af;
     }
-    #status.ok   .status-dot { background: #22c55e; }
-    #status.err  .status-dot { background: #ef4444; }
-    #status.info .status-dot { background: #9ca3af; }
 
-    .hint {
-      font-size: 11px;
-      color: #6b7280;
-      margin-top: 2px;
-    }
+    .ok .status-dot { background: #22c55e; }
+    .err .status-dot { background: #ef4444; }
 
+    /* ===== TABLE ===== */
     .table-shell {
       margin-top: 12px;
       border-radius: 10px;
@@ -174,22 +151,30 @@
 
     table {
       width: 100%;
-      border-collapse: separate; /* divisiones tipo Excel */
+      border-collapse: separate;
       border-spacing: 0;
+      table-layout: fixed;
       font-size: 13px;
-      table-layout: fixed;       /* clave para colgroup */
     }
+
+    col.codigo { width: 170px; }
+    col.desc { }
+    col.num { width: 110px; }
+    col.dia { width: 140px; }
+    col.actual { width: 140px; }
+    col.conteo { width: 120px; }
+    col.motivo { width: 150px; }
+    col.obs { width: 260px; }
 
     th, td {
-      padding: 8px 8px;
-      border-bottom: 1px solid #d1d5db;   /* más notable */
+      padding: 8px;
+      border-bottom: 1px solid #d1d5db;
+      border-right: 1px solid #cbd5e1;
       vertical-align: top;
-      background-clip: padding-box;
-      border-right: 1px solid #cbd5e1;    /* más notable */
     }
 
-    thead th:last-child,
-    tbody td:last-child {
+    th:last-child,
+    td:last-child {
       border-right: none;
     }
 
@@ -198,20 +183,24 @@
       top: 0;
       z-index: 1;
       background: #f9fafb;
-      text-align: left;
       font-size: 12px;
       font-weight: 600;
-      color: #4b5563;
+      color: #374151;
+      text-align: left;
     }
 
-    tbody tr:nth-child(odd)  td { background: #ffffff; }
-    tbody tr:nth-child(even) td { background: #f9fafb; }
-    tbody tr:hover td { background: #eef2ff; }
+    tbody tr:nth-child(even) td {
+      background: #f9fafb;
+    }
 
-    /* Código/IFR sin wrap */
-    #tabla td:first-child {
+    tbody tr:hover td {
+      background: #eef2ff;
+    }
+
+    /* Código sin wrap */
+    td.codigo {
       white-space: nowrap;
-      word-break: normal;
+      font-variant-numeric: tabular-nums;
     }
 
     input[type="number"] {
@@ -219,68 +208,40 @@
       text-align: right;
     }
 
-    /* Motivo angosto como “la primera fila” */
     .motivo-input {
-      width: 100%;
       max-width: 150px;
-      padding: 6px 8px;
+      width: 100%;
       font-size: 13px;
+      padding: 6px 8px;
     }
 
-    /* Observaciones más bajo por defecto */
     textarea {
       width: 100%;
-      height: 30px;       /* MÁS BAJO por defecto */
+      height: 30px;
       min-height: 30px;
       resize: vertical;
-      padding: 6px 8px;
       font-size: 13px;
       line-height: 1.2;
     }
 
     .summary {
       display: flex;
-      flex-wrap: wrap;
-      gap: 8px 16px;
-      align-items: center;
       justify-content: space-between;
       padding: 8px 12px;
-      border-top: 1px solid #e5e7eb;
       font-size: 12px;
-      color: #4b5563;
       background: #f9fafb;
+      border-top: 1px solid #e5e7eb;
+      color: #4b5563;
     }
 
-    .summary strong {
-      font-weight: 700;
-      color: #111827;
-    }
-
-    @media (max-width: 768px) {
-      .header {
-        flex-direction: column;
-        align-items: flex-start;
-      }
-
-      .toolbar {
-        flex-direction: column;
-        align-items: stretch;
-      }
-
-      button {
-        justify-content: center;
-        width: 100%;
-      }
-    }
-
+    /* ===== PRINT ===== */
     @media print {
-      body { background: #ffffff; }
+      body { background: #fff; }
       .no-print { display: none !important; }
-      .page { margin: 0; max-width: 100%; padding: 0; }
-      .card { box-shadow: none; border-radius: 0; }
-      .table-shell { border-radius: 0; border: none; }
 
-      /* CLAVE: imprimir toda la tabla (no solo lo visible) */
+      .page { margin: 0; padding: 0; }
+      .card { box-shadow: none; border-radius: 0; }
+
       .table-wrapper {
         max-height: none !important;
         overflow: visible !important;
@@ -293,7 +254,10 @@
         page-break-inside: avoid;
       }
 
-      textarea { min-height: 60px; height: 60px; } /* espacio para escribir a mano */
+      textarea {
+        height: 60px;
+        min-height: 60px;
+      }
     }
   </style>
 </head>
@@ -301,62 +265,42 @@
 <body>
   <div class="page">
     <div class="card">
+
       <div class="header no-print">
-        <div class="title-block">
-          <h1>Inventario Etiquetas</h1>
-        </div>
-        <div class="badge">
-          Paso 1: cargar listado · Paso 2: contar · Paso 3: guardar
-        </div>
+        <h1>Inventario Etiquetas</h1>
+        <div class="badge">Paso 1: cargar listado · Paso 2: contar · Paso 3: guardar</div>
       </div>
 
       <div class="toolbar no-print">
         <div class="toolbar-group">
-          <label for="responsable">Responsable del conteo</label>
+          <label>Responsable del conteo</label>
           <select id="responsable"></select>
-          <div class="hint">Elegí tu abreviatura y luego cargá tus insumos.</div>
         </div>
 
-        <div class="toolbar-group">
-          <label>&nbsp;</label>
-          <div style="display:flex; gap:8px; flex-wrap:wrap;">
-            <button id="btnCargar">
-              <span class="icon">📥</span><span>Cargar mis insumos</span>
-            </button>
-            <button id="btnGuardar" disabled>
-              <span class="icon">💾</span><span>Guardar conteos</span>
-            </button>
-            <button id="btnImprimir">
-              <span class="icon">🖨️</span><span>Imprimir listado</span>
-            </button>
-          </div>
-        </div>
+        <button id="btnCargar">📥 Cargar mis insumos</button>
+        <button id="btnGuardar" disabled>💾 Guardar conteos</button>
+        <button id="btnImprimir">🖨️ Imprimir listado</button>
 
-        <div class="toolbar-group" style="flex:1; min-width:180px;">
-          <label>Estado</label>
-          <div id="status" class="info">
-            <span class="status-dot"></span>
-            Preparado para empezar.
-          </div>
+        <div id="status">
+          <span class="status-dot"></span>
+          Seleccioná un responsable y cargá insumos.
         </div>
       </div>
 
       <div class="table-shell">
         <div class="table-wrapper">
           <table id="tabla">
-            <!-- Fija anchos (Motivo más chico, Código sin wrap, Descripción flexible) -->
             <colgroup>
-              <col style="width: 170px;">  <!-- Código -->
-              <col>                        <!-- Descripción -->
-              <col style="width: 110px;">  <!-- Stock 1030 -->
-              <col style="width: 110px;">  <!-- Stock 1032 -->
-              <col style="width: 140px;">  <!-- Día stock -->
-              <col style="width: 140px;">  <!-- Stock 1030 ACTUAL -->
-              <col style="width: 120px;">  <!-- Conteo físico -->
-              <col style="width: 150px;">  <!-- Motivo -->
-              <col style="width: 260px;">  <!-- Observaciones -->
+              <col class="codigo">
+              <col class="desc">
+              <col class="num">
+              <col class="num">
+              <col class="dia">
+              <col class="actual">
+              <col class="conteo">
+              <col class="motivo">
+              <col class="obs">
             </colgroup>
-
             <thead>
               <tr>
                 <th>Código</th>
@@ -376,927 +320,70 @@
 
         <div class="summary no-print">
           <div>
-            <strong id="totalInsumos">0</strong> insumos cargados ·
-            <strong id="totalCompletados">0</strong> con conteo cargado
+            <strong id="totalInsumos">0</strong> insumos ·
+            <strong id="totalCompletados">0</strong> con conteo
           </div>
-          <div class="hint">
-            Consejo: completá solo las filas que realmente contaste.
-          </div>
+          <div>Completá solo lo que contaste.</div>
         </div>
       </div>
+
     </div>
   </div>
 
 <script>
-  // ====== CONFIGURACIÓN: URLs de tus Flows ======
-  const URL_PLAN =
-    "https://defaultd83e43d1620044fbb4f6a908d91c2e.22.environment.api.powerplatform.com:443/powerautomate/automations/direct/workflows/59b0d1d8c50c4277b875cb90c744d925/triggers/manual/paths/invoke?api-version=1&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=nTWG-VHLTpxBq_lVT8BwliveH9lxEFEcFhRisJDhd_g";
+  /* === CONFIG === */
+  const URL_PLAN = "PEGAR_URL_PLAN";
+  const URL_GUARDAR = "PEGAR_URL_GUARDAR";
+  const RESPONSABLES = ["JQ","CG","DF","MF","LS","NM","PM"];
 
-  const URL_GUARDAR =
-    "https://defaultd83e43d1620044fbb4f6a908d91c2e.22.environment.api.powerplatform.com:443/powerautomate/automations/direct/workflows/db8f32640e3342199cad89ba5beca1a5/triggers/manual/paths/invoke?api-version=1&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=r_Y84605bC4pYKqpBNnQywaD3Qf5bY-jvVVBftQvkdU";
-
-  const RESPONSABLES_FIJOS = ["JQ", "CG", "DF", "MF", "LS", "NM", "PM"];
-
-  const $ = id => document.getElementById(id);
   const tbody = document.querySelector("#tabla tbody");
+  const $ = id => document.getElementById(id);
 
-  // Motivo único (solo select en primera fila)
   let motivoGlobal = "Semanal";
 
-  function setStatus(msg, type = "info") {
-    const el = $("status");
-    if (!el) return;
-    el.textContent = "";
-    el.className = type;
-    const dot = document.createElement("span");
-    dot.className = "status-dot";
-    el.appendChild(dot);
-    el.append(" " + msg);
+  function poblarResponsables(){
+    $("responsable").innerHTML = RESPONSABLES.map(r=>`<option>${r}</option>`).join("");
   }
 
-  function escapeHtml(str) {
-    return String(str ?? "").replace(/[&<>"']/g, s =>
-      ({ "&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#039;" }[s])
-    );
+  function setStatus(msg, type=""){
+    const s = $("status");
+    s.className = type;
+    s.innerHTML = `<span class="status-dot"></span>${msg}`;
   }
 
-  // Convierte número de Excel o ISO a "dd/MM/yyyy HH:mm"
-  function formatearDia(valor) {
-    if (valor == null || valor === "") return "";
-
-    if (/^\d{2}\/\d{2}\/\d{4}/.test(String(valor))) {
-      return String(valor);
-    }
-
-    if (typeof valor === "number" || /^[0-9]+(\.[0-9]+)?$/.test(String(valor))) {
-      const serial = Number(valor);
-      if (!Number.isFinite(serial)) return String(valor);
-
-      const days = Math.floor(serial);
-      const frac = serial - days;
-
-      const base = new Date(1899, 11, 30);
-      base.setDate(base.getDate() + days);
-
-      const minutesTotal = Math.round(frac * 24 * 60);
-      const hours   = String(Math.floor(minutesTotal / 60)).padStart(2, "0");
-      const minutes = String(minutesTotal % 60).padStart(2, "0");
-
-      const year  = base.getFullYear();
-      const month = String(base.getMonth() + 1).padStart(2, "0");
-      const day   = String(base.getDate()).padStart(2, "0");
-
-      return `${day}/${month}/${year} ${hours}:${minutes}`;
-    }
-
-    const d = new Date(valor);
-    if (!isNaN(d.getTime())) {
-      const year  = d.getFullYear();
-      const month = String(d.getMonth() + 1).padStart(2, "0");
-      const day   = String(d.getDate()).padStart(2, "0");
-      const hours = String(d.getHours()).padStart(2, "0");
-      const mins  = String(d.getMinutes()).padStart(2, "0");
-      return `${day}/${month}/${year} ${hours}:${mins}`;
-    }
-
-    return String(valor);
-  }
-
-  async function apiPost(url, body) {
-    const res = await fetch(url, {
-      method: "POST",
-      headers: { "content-type": "application/json" },
-      body: JSON.stringify(body)
-    });
-    const text = await res.text();
-    let data;
-    try { data = JSON.parse(text); } catch { data = text; }
-    if (!res.ok) {
-      throw new Error(typeof data === "string" ? data : JSON.stringify(data));
-    }
-    return data;
-  }
-
-  function actualizarResumen() {
-    const filas = Array.from(tbody.querySelectorAll("tr"));
-    const total = filas.length;
-    let completados = 0;
-
-    filas.forEach(tr => {
-      const v = tr.querySelector('input[data-field="conteo"]').value.trim();
-      if (v !== "") completados++;
-    });
-
-    $("totalInsumos").textContent = total;
-    $("totalCompletados").textContent = completados;
-  }
-
-  function aplicarMotivoATodasLasFilas(nuevoMotivo) {
-    motivoGlobal = nuevoMotivo;
-    tbody.querySelectorAll('select[data-role="motivo-row"]').forEach(sel => {
-      sel.value = motivoGlobal;
-    });
-    tbody.querySelectorAll('input[data-role="motivo-readonly"]').forEach(inp => {
-      inp.value = motivoGlobal;
-    });
-  }
-
-  function crearFila(item, idx) {
-    const descripcion =
-      item.descripcion ??
-      item["descripción"] ??
-      "";
-    const stock1030 =
-      item.stock1030 ??
-      item.stockJDE ??
-      item["Stock 1030"] ??
-      "";
-    const stock1032 =
-      item.stock1032 ??
-      item["Stock 1032"] ??
-      "";
-    const diaMostrar = formatearDia(item.dia);
-
+  function crearFila(item, idx){
     const tr = document.createElement("tr");
 
-    // Motivo: SOLO select en la primera fila. Las demás readonly.
-    const motivoCell = (idx === 0)
-      ? `
-        <select class="motivo-input" data-role="motivo-row">
-          <option value="Semanal">Semanal</option>
-          <option value="Administración">Administración</option>
-        </select>
-      `
-      : `
-        <input class="motivo-input" data-role="motivo-readonly" type="text" readonly value="${escapeHtml(motivoGlobal)}" />
-      `;
+    const motivoCell = idx === 0
+      ? `<select class="motivo-input"><option>Semanal</option><option>Administración</option></select>`
+      : `<input class="motivo-input" readonly value="${motivoGlobal}">`;
 
     tr.innerHTML = `
-      <td>${escapeHtml(item.codigo ?? "")}</td>
-      <td>${escapeHtml(descripcion)}</td>
-      <td style="text-align:right;">${escapeHtml(stock1030)}</td>
-      <td style="text-align:right;">${escapeHtml(stock1032)}</td>
-      <td>${escapeHtml(diaMostrar)}</td>
-
-      <!-- Stock 1030 ACTUAL (vacío por defecto) -->
-      <td>
-        <input type="number" min="0" step="1" placeholder="" data-field="stock1030_actual" />
-      </td>
-
-      <!-- Conteo físico: vacío por defecto (sin 0) -->
-      <td>
-        <input type="number" min="0" step="1" placeholder="" data-field="conteo" />
-      </td>
-
+      <td class="codigo">${item.codigo}</td>
+      <td>${item.descripcion}</td>
+      <td style="text-align:right">${item.stock1030}</td>
+      <td style="text-align:right">${item.stock1032}</td>
+      <td>${item.dia}</td>
+      <td><input type="number"></td>
+      <td><input type="number" data-conteo></td>
       <td>${motivoCell}</td>
-
-      <!-- Observaciones: vacío -->
-      <td><textarea placeholder=""></textarea></td>
+      <td><textarea></textarea></td>
     `;
 
-    tr.dataset.codigo = item.codigo ?? "";
-    tr.dataset.descripcion = descripcion;
-    tr.dataset.stock1030 = stock1030 ?? 0;
-    tr.dataset.stock1032 = stock1032 ?? 0;
-    tr.dataset.dia = diaMostrar;
-
-    tr.querySelector('input[data-field="conteo"]').addEventListener("input", actualizarResumen);
-
-    if (idx === 0) {
-      const sel = tr.querySelector('select[data-role="motivo-row"]');
-      sel.value = motivoGlobal;
-      sel.addEventListener("change", () => aplicarMotivoATodasLasFilas(sel.value));
+    if(idx===0){
+      tr.querySelector("select").addEventListener("change",e=>{
+        motivoGlobal=e.target.value;
+        tbody.querySelectorAll("input.motivo-input").forEach(i=>i.value=motivoGlobal);
+      });
     }
-
-    setTimeout(() => aplicarMotivoATodasLasFilas(motivoGlobal), 0);
 
     return tr;
   }
 
-  function poblarResponsables() {
-    $("responsable").innerHTML = RESPONSABLES_FIJOS
-      .map(r => `<option value="${r}">${r}</option>`)
-      .join("");
-    setStatus("Seleccioná un responsable y hacé clic en «Cargar mis insumos».", "info");
-  }
-
-  async function cargarPlan() {
-    const responsable = $("responsable").value;
-    tbody.innerHTML = "";
-    actualizarResumen();
-    $("btnGuardar").disabled = true;
-    setStatus("Cargando insumos para " + responsable + "...", "info");
-
-    try {
-      const data = await apiPost(URL_PLAN, { responsable });
-      let items = data.items || [];
-
-      if (items.length && Array.isArray(items[0])) items = items[0];
-
-      if (!items.length) {
-        setStatus("No hay insumos pendientes para este responsable.", "err");
-        return;
-      }
-
-      items.forEach((i, idx) => tbody.appendChild(crearFila(i, idx)));
-      aplicarMotivoATodasLasFilas(motivoGlobal);
-
-      $("btnGuardar").disabled = false;
-      actualizarResumen();
-      setStatus(`${items.length} insumos cargados. Completá los conteos y luego guardá.`, "ok");
-    } catch (e) {
-      console.error(e);
-      setStatus("Error al cargar insumos: " + e.message, "err");
-    }
-  }
-
-  async function guardarConteos() {
-    const responsable = $("responsable").value;
-    const filas = Array.from(tbody.querySelectorAll("tr"));
-    const conteos = [];
-
-    for (const tr of filas) {
-      const fisicoStr = tr.querySelector('input[data-field="conteo"]').value.trim();
-      if (fisicoStr === "") continue;
-
-      const conteoFisico = Number(fisicoStr);
-      if (!Number.isFinite(conteoFisico) || conteoFisico < 0) continue;
-
-      const stockActualStr = tr.querySelector('input[data-field="stock1030_actual"]').value.trim();
-      const stock1030Original = Number(tr.dataset.stock1030 || 0);
-
-      let stock1030Final = stock1030Original;
-      if (stockActualStr !== "") {
-        const n = Number(stockActualStr);
-        if (Number.isFinite(n) && n >= 0) stock1030Final = n;
-      }
-
-      conteos.push({
-        codigo: tr.dataset.codigo,
-        descripcion: tr.dataset.descripcion,
-        stock1030: stock1030Final,
-        stock1030Original: stock1030Original, // podés borrarlo si no lo querés
-        stock1032: Number(tr.dataset.stock1032 || 0),
-        dia: tr.dataset.dia,
-        conteoFisico,
-        motivo: motivoGlobal,
-        observaciones: tr.querySelector("textarea").value
-      });
-    }
-
-    if (!conteos.length) {
-      setStatus("No hay conteos cargados para guardar.", "err");
-      return;
-    }
-
-    setStatus("Guardando conteos...", "info");
-    $("btnGuardar").disabled = true;
-
-    try {
-      await apiPost(URL_GUARDAR, { responsable, conteos });
-      setStatus("Conteos guardados correctamente.", "ok");
-    } catch (e) {
-      console.error(e);
-      setStatus("Error al guardar conteos: " + e.message, "err");
-    } finally {
-      $("btnGuardar").disabled = false;
-    }
-  }
-
-  $("btnCargar").addEventListener("click", cargarPlan);
-  $("btnGuardar").addEventListener("click", guardarConteos);
-  $("btnImprimir").addEventListener("click", () => window.print());
+  $("btnImprimir").onclick = ()=>window.print();
 
   poblarResponsables();
 </script>
-</body>
-</html>
 
-
-    .badge {
-      padding: 4px 8px;
-      border-radius: 999px;
-      font-size: 11px;
-      font-weight: 600;
-      background: #eff6ff;
-      color: #1d4ed8;
-      border: 1px solid #dbeafe;
-      white-space: nowrap;
-    }
-
-    .toolbar {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 12px;
-      align-items: center;
-      margin-bottom: 12px;
-      padding: 10px 12px;
-      border-radius: 10px;
-      background: #f9fafb;
-      border: 1px solid #e5e7eb;
-    }
-
-    .toolbar-group {
-      display: flex;
-      flex-direction: column;
-      gap: 4px;
-    }
-
-    label {
-      font-size: 12px;
-      font-weight: 600;
-      color: #4b5563;
-    }
-
-    select, input, textarea, button {
-      font-size: 14px;
-      border-radius: 8px;
-      border: 1px solid #d1d5db;
-      padding: 7px 10px;
-      outline: none;
-      transition: border-color 0.15s ease, box-shadow 0.15s ease;
-    }
-
-    select:focus,
-    input:focus,
-    textarea:focus {
-      border-color: #2563eb;
-      box-shadow: 0 0 0 1px rgba(37, 99, 235, 0.25);
-    }
-
-    button {
-      cursor: pointer;
-      border: none;
-      font-weight: 600;
-      padding-inline: 14px;
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-      white-space: nowrap;
-    }
-
-    button span.icon {
-      font-size: 14px;
-    }
-
-    #btnCargar {
-      background: #2563eb;
-      color: #ffffff;
-    }
-
-    #btnGuardar {
-      background: #16a34a;
-      color: #ffffff;
-    }
-
-    #btnImprimir {
-      background: #6b7280;
-      color: #ffffff;
-    }
-
-    button:disabled {
-      opacity: 0.55;
-      cursor: not-allowed;
-      box-shadow: none;
-    }
-
-    #status {
-      font-size: 13px;
-      min-height: 18px;
-    }
-
-    #status.ok   { color: #16a34a; }
-    #status.err  { color: #b91c1c; }
-    #status.info { color: #4b5563; }
-
-    .status-dot {
-      width: 8px;
-      height: 8px;
-      border-radius: 999px;
-      display: inline-block;
-      margin-right: 6px;
-      background: #9ca3af;
-    }
-    #status.ok   .status-dot { background: #22c55e; }
-    #status.err  .status-dot { background: #ef4444; }
-    #status.info .status-dot { background: #9ca3af; }
-
-    .hint {
-      font-size: 11px;
-      color: #6b7280;
-      margin-top: 2px;
-    }
-
-    .table-shell {
-      margin-top: 12px;
-      border-radius: 10px;
-      border: 1px solid #e5e7eb;
-      overflow: hidden;
-      background: #ffffff;
-    }
-
-    .table-wrapper {
-      max-height: 60vh;
-      overflow: auto;
-    }
-
-    table {
-      width: 100%;
-      border-collapse: separate;     /* para divisiones tipo Excel */
-      border-spacing: 0;
-      font-size: 13px;
-    }
-
-    th, td {
-      padding: 8px 8px;
-      border-bottom: 1px solid #e5e7eb;
-      vertical-align: top;
-      background-clip: padding-box;
-    }
-
-    /* divisiones discretas entre columnas (estilo Excel) */
-    th, td {
-      border-right: 1px solid #edf2f7;
-    }
-    thead th:last-child,
-    tbody td:last-child {
-      border-right: none;
-    }
-
-    th {
-      position: sticky;
-      top: 0;
-      z-index: 1;
-      background: #f9fafb;
-      text-align: left;
-      font-size: 12px;
-      font-weight: 600;
-      color: #4b5563;
-    }
-
-    tbody tr:nth-child(odd)  td { background: #ffffff; }
-    tbody tr:nth-child(even) td { background: #f9fafb; }
-    tbody tr:hover td { background: #eef2ff; }
-
-    input[type="number"] {
-      width: 100%;
-      text-align: right;
-    }
-
-    textarea {
-      width: 100%;
-      min-height: 36px;
-      resize: vertical;
-    }
-
-    .summary {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 8px 16px;
-      align-items: center;
-      justify-content: space-between;
-      padding: 8px 12px;
-      border-top: 1px solid #e5e7eb;
-      font-size: 12px;
-      color: #4b5563;
-      background: #f9fafb;
-    }
-
-    .summary strong {
-      font-weight: 700;
-      color: #111827;
-    }
-
-    @media (max-width: 768px) {
-      .header {
-        flex-direction: column;
-        align-items: flex-start;
-      }
-
-      .toolbar {
-        flex-direction: column;
-        align-items: stretch;
-      }
-
-      button {
-        justify-content: center;
-        width: 100%;
-      }
-    }
-
-    @media print {
-  body { background: #ffffff; }
-  .no-print { display: none !important; }
-
-  .page {
-    margin: 0;
-    max-width: 100%;
-    padding: 0;
-  }
-
-  .card {
-    box-shadow: none;
-    border-radius: 0;
-  }
-
-  .table-shell {
-    border-radius: 0;
-    border: none;
-  }
-
-  /* CLAVE: que imprima toda la tabla, no solo lo visible */
-  .table-wrapper {
-    max-height: none !important;
-    overflow: visible !important;
-  }
-
-  /* opcional: evita headers “pegajosos” raros en print */
-  th {
-    position: static !important;
-  }
-
-  /* opcional: evitar que corte una fila a la mitad */
-  tr {
-    break-inside: avoid;
-    page-break-inside: avoid;
-  }
-
-  textarea { min-height: 60px; }
-}
-
-  </style>
-</head>
-
-<body>
-  <div class="page">
-    <div class="card">
-      <div class="header no-print">
-        <div class="title-block">
-          <h1>Inventario Etiquetas</h1>
-          <!-- (sacado el texto que no querías) -->
-        </div>
-        <div class="badge">
-          Paso 1: cargar listado · Paso 2: contar · Paso 3: guardar
-        </div>
-      </div>
-
-      <div class="toolbar no-print">
-        <div class="toolbar-group">
-          <label for="responsable">Responsable del conteo</label>
-          <select id="responsable"></select>
-          <div class="hint">Elegí tu abreviatura y luego cargá tus insumos.</div>
-        </div>
-
-        <div class="toolbar-group">
-          <label>&nbsp;</label>
-          <div style="display:flex; gap:8px; flex-wrap:wrap;">
-            <button id="btnCargar">
-              <span class="icon">📥</span><span>Cargar mis insumos</span>
-            </button>
-            <button id="btnGuardar" disabled>
-              <span class="icon">💾</span><span>Guardar conteos</span>
-            </button>
-            <button id="btnImprimir">
-              <span class="icon">🖨️</span><span>Imprimir listado</span>
-            </button>
-          </div>
-        </div>
-
-        <div class="toolbar-group" style="flex:1; min-width:180px;">
-          <label>Estado</label>
-          <div id="status" class="info">
-            <span class="status-dot"></span>
-            Preparado para empezar.
-          </div>
-        </div>
-      </div>
-
-      <div class="table-shell">
-        <div class="table-wrapper">
-          <table id="tabla">
-            <thead>
-              <tr>
-                <th>Código</th>
-                <th>Descripción</th>
-                <th>Stock 1030</th>
-                <th>Stock 1032</th>
-                <th>Día stock</th>
-
-                <!-- NUEVO -->
-                <th>Stock 1030 ACTUAL</th>
-
-                <th>Conteo físico</th>
-                <th>Motivo</th>
-                <th>Observaciones</th>
-              </tr>
-            </thead>
-            <tbody></tbody>
-          </table>
-        </div>
-
-        <div class="summary no-print">
-          <div>
-            <strong id="totalInsumos">0</strong> insumos cargados ·
-            <strong id="totalCompletados">0</strong> con conteo cargado
-          </div>
-          <div class="hint">
-            Consejo: completá solo las filas que realmente contaste.
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-
-<script>
-  // ====== CONFIGURACIÓN: URLs de tus Flows ======
-  const URL_PLAN =
-    "https://defaultd83e43d1620044fbb4f6a908d91c2e.22.environment.api.powerplatform.com:443/powerautomate/automations/direct/workflows/59b0d1d8c50c4277b875cb90c744d925/triggers/manual/paths/invoke?api-version=1&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=nTWG-VHLTpxBq_lVT8BwliveH9lxEFEcFhRisJDhd_g";
-
-  const URL_GUARDAR =
-    "https://defaultd83e43d1620044fbb4f6a908d91c2e.22.environment.api.powerplatform.com:443/powerautomate/automations/direct/workflows/db8f32640e3342199cad89ba5beca1a5/triggers/manual/paths/invoke?api-version=1&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=r_Y84605bC4pYKqpBNnQywaD3Qf5bY-jvVVBftQvkdU";
-
-  const RESPONSABLES_FIJOS = ["JQ", "CG", "DF", "MF", "LS", "NM", "PM"];
-
-  const $ = id => document.getElementById(id);
-  const tbody = document.querySelector("#tabla tbody");
-
-  // Motivo único (solo select en primera fila)
-  let motivoGlobal = "Semanal";
-
-  function setStatus(msg, type = "info") {
-    const el = $("status");
-    if (!el) return;
-    el.textContent = "";
-    el.className = type;
-    const dot = document.createElement("span");
-    dot.className = "status-dot";
-    el.appendChild(dot);
-    el.append(" " + msg);
-  }
-
-  function escapeHtml(str) {
-    return String(str ?? "").replace(/[&<>"']/g, s =>
-      ({ "&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#039;" }[s])
-    );
-  }
-
-  // Convierte número de Excel o ISO a "dd/MM/yyyy HH:mm"
-  function formatearDia(valor) {
-    if (valor == null || valor === "") return "";
-
-    if (/^\d{2}\/\d{2}\/\d{4}/.test(String(valor))) {
-      return String(valor);
-    }
-
-    if (typeof valor === "number" || /^[0-9]+(\.[0-9]+)?$/.test(String(valor))) {
-      const serial = Number(valor);
-      if (!Number.isFinite(serial)) return String(valor);
-
-      const days = Math.floor(serial);
-      const frac = serial - days;
-
-      const base = new Date(1899, 11, 30);
-      base.setDate(base.getDate() + days);
-
-      const minutesTotal = Math.round(frac * 24 * 60);
-      const hours   = String(Math.floor(minutesTotal / 60)).padStart(2, "0");
-      const minutes = String(minutesTotal % 60).padStart(2, "0");
-
-      const year  = base.getFullYear();
-      const month = String(base.getMonth() + 1).padStart(2, "0");
-      const day   = String(base.getDate()).padStart(2, "0");
-
-      return `${day}/${month}/${year} ${hours}:${minutes}`;
-    }
-
-    const d = new Date(valor);
-    if (!isNaN(d.getTime())) {
-      const year  = d.getFullYear();
-      const month = String(d.getMonth() + 1).padStart(2, "0");
-      const day   = String(d.getDate()).padStart(2, "0");
-      const hours = String(d.getHours()).padStart(2, "0");
-      const mins  = String(d.getMinutes()).padStart(2, "0");
-      return `${day}/${month}/${year} ${hours}:${mins}`;
-    }
-
-    return String(valor);
-  }
-
-  async function apiPost(url, body) {
-    const res = await fetch(url, {
-      method: "POST",
-      headers: { "content-type": "application/json" },
-      body: JSON.stringify(body)
-    });
-    const text = await res.text();
-    let data;
-    try { data = JSON.parse(text); } catch { data = text; }
-    if (!res.ok) {
-      throw new Error(typeof data === "string" ? data : JSON.stringify(data));
-    }
-    return data;
-  }
-
-  function actualizarResumen() {
-    const filas = Array.from(tbody.querySelectorAll("tr"));
-    const total = filas.length;
-    let completados = 0;
-
-    filas.forEach(tr => {
-      const v = tr.querySelector('input[data-field="conteo"]').value.trim();
-      if (v !== "") completados++;
-    });
-
-    $("totalInsumos").textContent = total;
-    $("totalCompletados").textContent = completados;
-  }
-
-  function aplicarMotivoATodasLasFilas(nuevoMotivo) {
-    motivoGlobal = nuevoMotivo;
-    tbody.querySelectorAll('select[data-role="motivo-row"]').forEach(sel => {
-      sel.value = motivoGlobal;
-    });
-    tbody.querySelectorAll('input[data-role="motivo-readonly"]').forEach(inp => {
-      inp.value = motivoGlobal;
-    });
-  }
-
-  function crearFila(item, idx) {
-    const descripcion =
-      item.descripcion ??
-      item["descripción"] ??
-      "";
-    const stock1030 =
-      item.stock1030 ??
-      item.stockJDE ??
-      item["Stock 1030"] ??
-      "";
-    const stock1032 =
-      item.stock1032 ??
-      item["Stock 1032"] ??
-      "";
-    const diaMostrar = formatearDia(item.dia);
-
-    const tr = document.createElement("tr");
-
-    // Motivo: SOLO select en la primera fila. Las demás readonly.
-    const motivoCell = (idx === 0)
-      ? `
-        <select class="motivo-input" data-role="motivo-row">
-          <option value="Semanal">Semanal</option>
-          <option value="Administración">Administración</option>
-        </select>
-      `
-      : `
-        <input class="motivo-input" data-role="motivo-readonly" type="text" readonly value="${escapeHtml(motivoGlobal)}" />
-      `;
-
-    tr.innerHTML = `
-      <td>${escapeHtml(item.codigo ?? "")}</td>
-      <td>${escapeHtml(descripcion)}</td>
-      <td style="text-align:right;">${escapeHtml(stock1030)}</td>
-      <td style="text-align:right;">${escapeHtml(stock1032)}</td>
-      <td>${escapeHtml(diaMostrar)}</td>
-
-      <!-- NUEVO: Stock 1030 ACTUAL (vacío por defecto) -->
-      <td>
-        <input type="number" min="0" step="1" placeholder="" data-field="stock1030_actual" />
-      </td>
-
-      <!-- Conteo físico: vacío por defecto (sin 0) -->
-      <td>
-        <input type="number" min="0" step="1" placeholder="" data-field="conteo" />
-      </td>
-
-      <td>${motivoCell}</td>
-
-      <!-- Observaciones: vacío (sin placeholder que ocupe lugar en impresión) -->
-      <td><textarea placeholder=""></textarea></td>
-    `;
-
-    tr.dataset.codigo = item.codigo ?? "";
-    tr.dataset.descripcion = descripcion;
-    tr.dataset.stock1030 = stock1030 ?? 0;
-    tr.dataset.stock1032 = stock1032 ?? 0;
-    tr.dataset.dia = diaMostrar;
-
-    // Recalcular resumen cuando se escriba un conteo
-    tr.querySelector('input[data-field="conteo"]').addEventListener("input", actualizarResumen);
-
-    // Si cambian el motivo en la primera fila, se propaga
-    if (idx === 0) {
-      const sel = tr.querySelector('select[data-role="motivo-row"]');
-      sel.value = motivoGlobal;
-      sel.addEventListener("change", () => aplicarMotivoATodasLasFilas(sel.value));
-    }
-
-    // Asegura que las filas readonly reflejen el global al crearlas
-    setTimeout(() => aplicarMotivoATodasLasFilas(motivoGlobal), 0);
-
-    return tr;
-  }
-
-  function poblarResponsables() {
-    $("responsable").innerHTML = RESPONSABLES_FIJOS
-      .map(r => `<option value="${r}">${r}</option>`)
-      .join("");
-    setStatus("Seleccioná un responsable y hacé clic en «Cargar mis insumos».", "info");
-  }
-
-  async function cargarPlan() {
-    const responsable = $("responsable").value;
-    tbody.innerHTML = "";
-    actualizarResumen();
-    $("btnGuardar").disabled = true;
-    setStatus("Cargando insumos para " + responsable + "...", "info");
-
-    try {
-      const data = await apiPost(URL_PLAN, { responsable });
-      let items = data.items || [];
-
-      // Por si viene como [[{...}]]
-      if (items.length && Array.isArray(items[0])) {
-        items = items[0];
-      }
-
-      if (!items.length) {
-        setStatus("No hay insumos pendientes para este responsable.", "err");
-        return;
-      }
-
-      items.forEach((i, idx) => tbody.appendChild(crearFila(i, idx)));
-
-      // aplicar motivo global una vez cargado
-      aplicarMotivoATodasLasFilas(motivoGlobal);
-
-      $("btnGuardar").disabled = false;
-      actualizarResumen();
-      setStatus(`${items.length} insumos cargados. Completá los conteos y luego guardá.`, "ok");
-    } catch (e) {
-      console.error(e);
-      setStatus("Error al cargar insumos: " + e.message, "err");
-    }
-  }
-
-  async function guardarConteos() {
-    const responsable = $("responsable").value;
-    const filas = Array.from(tbody.querySelectorAll("tr"));
-    const conteos = [];
-
-    for (const tr of filas) {
-      const fisicoStr = tr.querySelector('input[data-field="conteo"]').value.trim();
-      if (fisicoStr === "") continue;
-
-      const conteoFisico = Number(fisicoStr);
-      if (!Number.isFinite(conteoFisico) || conteoFisico < 0) continue;
-
-      // NUEVO: Stock 1030 ACTUAL si está cargado; si no, usar el original
-      const stockActualStr = tr.querySelector('input[data-field="stock1030_actual"]').value.trim();
-      const stock1030Original = Number(tr.dataset.stock1030 || 0);
-
-      let stock1030Final = stock1030Original;
-      if (stockActualStr !== "") {
-        const n = Number(stockActualStr);
-        if (Number.isFinite(n) && n >= 0) stock1030Final = n;
-      }
-
-      conteos.push({
-        codigo: tr.dataset.codigo,
-        descripcion: tr.dataset.descripcion,
-        stock1030: stock1030Final,                 // <-- se devuelve el final
-        stock1030Original: stock1030Original,       // (extra útil por auditoría; podés borrarlo si no querés)
-        stock1032: Number(tr.dataset.stock1032 || 0),
-        dia: tr.dataset.dia,
-        conteoFisico,
-        motivo: motivoGlobal,                      // motivo único
-        observaciones: tr.querySelector("textarea").value
-      });
-    }
-
-    if (!conteos.length) {
-      setStatus("No hay conteos cargados para guardar.", "err");
-      return;
-    }
-
-    setStatus("Guardando conteos...", "info");
-    $("btnGuardar").disabled = true;
-
-    try {
-      await apiPost(URL_GUARDAR, { responsable, conteos });
-      setStatus("Conteos guardados correctamente.", "ok");
-    } catch (e) {
-      console.error(e);
-      setStatus("Error al guardar conteos: " + e.message, "err");
-    } finally {
-      $("btnGuardar").disabled = false;
-    }
-  }
-
-  $("btnCargar").addEventListener("click", cargarPlan);
-  $("btnGuardar").addEventListener("click", guardarConteos);
-  $("btnImprimir").addEventListener("click", () => window.print());
-
-  poblarResponsables();
-</script>
 </body>
 </html>
