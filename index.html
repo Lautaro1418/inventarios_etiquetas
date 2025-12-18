@@ -63,9 +63,9 @@
 
     select, input, textarea, button {
       font-size: 14px;
-      border-radius: 8px;
+      border-radius: 10px;
       border: 1px solid #d1d5db;
-      padding: 6px 10px;
+      padding: 10px 12px;
       outline: none;
       transition: border-color 0.15s ease, box-shadow 0.15s ease;
       background: #fff;
@@ -73,18 +73,21 @@
 
     select:focus, input:focus, textarea:focus {
       border-color: #2563eb;
-      box-shadow: 0 0 0 1px rgba(37, 99, 235, 0.25);
+      box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.18);
     }
 
     button {
       cursor: pointer;
       border: none;
-      font-weight: 600;
+      font-weight: 700;
       padding-inline: 14px;
       display: inline-flex;
       align-items: center;
-      gap: 6px;
+      justify-content: center;
+      gap: 8px;
       white-space: nowrap;
+      border-radius: 12px;
+      padding-block: 12px;
     }
 
     #btnCargar  { background: #2563eb; color: #ffffff; }
@@ -110,6 +113,7 @@
     #status.err{ color: #b91c1c; }   #status.err .status-dot{ background: #ef4444; }
     #status.info{color:#4b5563;}     #status.info .status-dot{ background:#9ca3af; }
 
+    /* ====== TABLA (Desktop) ====== */
     .table-shell {
       margin-top: 12px;
       border-radius: 10px;
@@ -145,7 +149,7 @@
       background: #f9fafb;
       text-align: left;
       font-size: 12px;
-      font-weight: 700;
+      font-weight: 800;
       color: #1f2937;
       border-bottom: 2px solid #94a3b8;
     }
@@ -171,8 +175,9 @@
     .motivo-input {
       width: 100%;
       max-width: 150px;
-      padding: 6px 8px;
+      padding: 8px 10px;
       font-size: 12px;
+      border-radius: 10px;
     }
 
     textarea {
@@ -180,9 +185,10 @@
       height: 28px;
       min-height: 28px;
       resize: vertical;
-      padding: 6px 8px;
+      padding: 8px 10px;
       font-size: 13px;
       line-height: 1.2;
+      border-radius: 10px;
     }
 
     .summary {
@@ -198,18 +204,119 @@
       background: #f9fafb;
     }
 
-    .summary strong { font-weight: 700; color: #111827; }
+    .summary strong { font-weight: 800; color: #111827; }
+
+    /* ====== MOBILE UX: CARDS ====== */
+    .mobile-list { display: none; margin-top: 12px; }
+    .mobile-card {
+      border: 1px solid #e5e7eb;
+      border-radius: 14px;
+      background: #fff;
+      padding: 12px;
+      margin-bottom: 10px;
+      box-shadow: 0 6px 12px -8px rgba(0,0,0,.15);
+    }
+    .mc-head {
+      display: flex;
+      gap: 10px;
+      align-items: flex-start;
+      justify-content: space-between;
+      margin-bottom: 10px;
+    }
+    .mc-code {
+      font-weight: 900;
+      letter-spacing: .2px;
+      font-variant-numeric: tabular-nums;
+      white-space: nowrap;
+    }
+    .mc-desc {
+      font-size: 12px;
+      color: #374151;
+      line-height: 1.25;
+      margin-top: 4px;
+      word-break: break-word;
+    }
+    .mc-meta {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+      margin-bottom: 10px;
+    }
+    .pill {
+      border: 1px solid #e5e7eb;
+      border-radius: 12px;
+      padding: 8px 10px;
+      background: #f9fafb;
+      font-size: 12px;
+      color: #374151;
+      display: flex;
+      justify-content: space-between;
+      gap: 10px;
+    }
+    .pill strong { font-weight: 900; color: #111827; }
+    .mc-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+      margin-bottom: 10px;
+    }
+    .field label {
+      display: block;
+      font-size: 11px;
+      font-weight: 800;
+      color: #4b5563;
+      margin-bottom: 6px;
+    }
+    .field input, .field textarea, .field select {
+      width: 100%;
+      border-radius: 14px;
+      padding: 12px;
+      font-size: 16px; /* clave: evita zoom raro iOS */
+    }
+    .field textarea { min-height: 44px; height: 44px; }
+    .mc-bottom {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 10px;
+    }
+
+    /* Barra fija inferior en mobile para “Guardar” sin scrollear */
+    .mobile-actionbar {
+      display: none;
+      position: fixed;
+      left: 0; right: 0; bottom: 0;
+      padding: 10px 12px;
+      background: rgba(243,244,246,.92);
+      backdrop-filter: blur(8px);
+      border-top: 1px solid #e5e7eb;
+      z-index: 50;
+    }
+    .mobile-actionbar .inner {
+      max-width: 900px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+      padding: 0 10px;
+    }
 
     @media (max-width: 768px) {
       .header { flex-direction: column; align-items: flex-start; }
       .toolbar { flex-direction: column; align-items: stretch; }
-      button { justify-content: center; width: 100%; }
+      button { width: 100%; }
       #status { min-width: unset; }
+
+      /* en mobile oculto tabla y muestro cards */
+      .table-shell { display: none; }
+      .mobile-list { display: block; }
+      .mobile-actionbar { display: block; }
+
+      /* deja espacio para la barra fija */
+      .page { padding-bottom: 84px; }
     }
 
     /* ---- PRINT HEADER (solo impresión) ---- */
     .print-header { display: none; }
-
     @media print {
       @page { size: A4 landscape; margin: 5mm; }
 
@@ -217,7 +324,9 @@
       .no-print { display: none !important; }
       .page { margin: 0; max-width: 100%; padding: 0; }
       .card { box-shadow: none; border-radius: 0; padding: 0; }
-      .table-shell { border-radius: 0; border: none; }
+      .table-shell { display: block; border-radius: 0; border: none; }
+      .mobile-list { display: none !important; }
+      .mobile-actionbar { display: none !important; }
 
       .print-header {
         display: flex !important;
@@ -227,21 +336,18 @@
         padding: 0 0 4px 0;
         border-bottom: 2px solid #000;
       }
-      .print-title { font-size: 16px; font-weight: 700; }
+      .print-title { font-size: 16px; font-weight: 800; }
       .print-meta  { font-size: 11px; }
 
-      /* imprimir toda la tabla */
       .table-wrapper{
         max-height: none !important;
         height: auto !important;
         overflow: visible !important;
       }
-
       th { position: static !important; }
 
       table { font-size: 10px; table-layout: fixed; }
       th, td { padding: 5px 6px; }
-
       tr { break-inside: avoid; page-break-inside: avoid; }
 
       textarea { height: 40px; min-height: 40px; }
@@ -284,6 +390,10 @@
         <div class="print-meta">Responsable: <strong id="print-responsable">—</strong></div>
       </div>
 
+      <!-- MOBILE: cards -->
+      <div id="mobileList" class="mobile-list"></div>
+
+      <!-- DESKTOP: tabla -->
       <div class="table-shell">
         <div class="table-wrapper">
           <table id="tabla">
@@ -292,7 +402,7 @@
               <col style="width: 190px;">
               <col style="width: 80px;">
               <col style="width: 80px;">
-              <col style="width: 80px;">
+              <col style="width: 90px;">
               <col style="width: 120px;">
               <col style="width: 120px;">
               <col style="width: 100px;">
@@ -328,7 +438,16 @@
     </div>
   </div>
 
+  <!-- barra fija mobile -->
+  <div class="mobile-actionbar no-print">
+    <div class="inner">
+      <button id="btnCargarMobile" style="background:#2563eb;color:#fff;">📥 Cargar</button>
+      <button id="btnGuardarMobile" style="background:#16a34a;color:#fff;" disabled>💾 Guardar</button>
+    </div>
+  </div>
+
 <script>
+  // ====== CONFIG: URLs de Flows ======
   const URL_PLAN =
     "https://defaultd83e43d1620044fbb4f6a908d91c2e.22.environment.api.powerplatform.com:443/powerautomate/automations/direct/workflows/59b0d1d8c50c4277b875cb90c744d925/triggers/manual/paths/invoke?api-version=1&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=nTWG-VHLTpxBq_lVT8BwliveH9lxEFEcFhRisJDhd_g";
 
@@ -339,8 +458,17 @@
 
   const $ = id => document.getElementById(id);
   const tbody = document.querySelector("#tabla tbody");
+  const mobileList = $("mobileList");
 
   let motivoGlobal = "Semanal";
+
+  // Guardamos referencias por fila para sincronizar Table <-> Mobile
+  // rowStore[rowId] = { ...refs }
+  const rowStore = Object.create(null);
+
+  function isMobileView() {
+    return window.matchMedia("(max-width: 768px)").matches;
+  }
 
   function syncPrintResponsable() {
     const sel = $("responsable");
@@ -415,21 +543,32 @@
   }
 
   function actualizarResumen() {
-    const filas = Array.from(tbody.querySelectorAll("tr"));
+    const filas = Object.values(rowStore);
     $("totalInsumos").textContent = filas.length;
 
     let completados = 0;
-    filas.forEach(tr => {
-      const v = tr.querySelector('input[data-field="conteo"]').value.trim();
+    for (const r of filas) {
+      const v = (r.inputConteoMobile?.value ?? r.inputConteoTable?.value ?? "").trim();
       if (v !== "") completados++;
-    });
+    }
     $("totalCompletados").textContent = completados;
+  }
+
+  function setGuardarEnabled(on) {
+    $("btnGuardar").disabled = !on;
+    $("btnGuardarMobile").disabled = !on;
   }
 
   function aplicarMotivoATodasLasFilas(nuevoMotivo) {
     motivoGlobal = nuevoMotivo;
-    tbody.querySelectorAll('select[data-role="motivo-row"]').forEach(sel => sel.value = motivoGlobal);
-    tbody.querySelectorAll('input[data-role="motivo-readonly"]').forEach(inp => inp.value = motivoGlobal);
+
+    for (const r of Object.values(rowStore)) {
+      if (r.selMotivoFirstTable) r.selMotivoFirstTable.value = motivoGlobal;
+      if (r.selMotivoFirstMobile) r.selMotivoFirstMobile.value = motivoGlobal;
+
+      if (r.motivoReadonlyTable) r.motivoReadonlyTable.value = motivoGlobal;
+      if (r.motivoReadonlyMobile) r.motivoReadonlyMobile.value = motivoGlobal;
+    }
   }
 
   function getFirstExisting(obj, keys) {
@@ -439,14 +578,21 @@
     return "";
   }
 
-  function crearFila(item, idx) {
+  function linkTwoInputs(a, b, onChange) {
+    if (!a || !b) return;
+    const sync = (src, dst) => {
+      dst.value = src.value;
+      if (onChange) onChange();
+    };
+    a.addEventListener("input", () => sync(a, b));
+    b.addEventListener("input", () => sync(b, a));
+  }
+
+  function crearFilaTabla(item, idx, rowId) {
     const codigo = getFirstExisting(item, ["codigo","Código","CODIGO","Code"]);
-
     const descripcion = getFirstExisting(item, [
-      "descripcion","descripción","Descripcion","Descripción","DESCRIPCION","DESCRIPCIÓN",
-      "desc","Desc"
+      "descripcion","descripción","Descripcion","Descripción","DESCRIPCION","DESCRIPCIÓN","desc","Desc"
     ]);
-
     const stock1030 = getFirstExisting(item, ["stock1030","Stock1030","STOCK1030","Stock 1030","stockJDE"]);
     const stock1032 = getFirstExisting(item, ["stock1032","Stock1032","STOCK1032","Stock 1032"]);
     const diaMostrar = formatearDia(getFirstExisting(item, ["dia","DIA","fecha","Fecha","Dia stock","Día stock"]));
@@ -455,39 +601,123 @@
 
     const motivoCell = (idx === 0)
       ? `
-        <select class="motivo-input" data-role="motivo-row">
+        <select class="motivo-input" data-role="motivo-first-table">
           <option value="Semanal">Semanal</option>
           <option value="Administración">Administración</option>
         </select>`
-      : `<input class="motivo-input" data-role="motivo-readonly" type="text" readonly value="${escapeHtml(motivoGlobal)}" />`;
+      : `<input class="motivo-input" data-role="motivo-readonly-table" type="text" readonly value="${escapeHtml(motivoGlobal)}" />`;
 
     tr.innerHTML = `
       <td class="col-codigo">${escapeHtml(codigo)}</td>
       <td class="col-desc">${escapeHtml(descripcion)}</td>
       <td style="text-align:right;">${escapeHtml(stock1030)}</td>
       <td style="text-align:right;">${escapeHtml(stock1032)}</td>
-      <td>${escapeHtml(diaMostrar)}</td>
-      <td><input type="number" min="0" step="1" placeholder="" data-field="stock1030_actual" /></td>
-      <td><input type="number" min="0" step="1" placeholder="" data-field="conteo" /></td>
+      <td style="font-size:11px;">${escapeHtml(diaMostrar)}</td>
+      <td><input type="number" min="0" step="1" placeholder="" data-field="stock1030_actual_table" /></td>
+      <td><input type="number" min="0" step="1" placeholder="" data-field="conteo_table" /></td>
       <td>${motivoCell}</td>
       <td><textarea placeholder=""></textarea></td>
     `;
 
+    tr.dataset.rowId = rowId;
     tr.dataset.codigo = codigo;
     tr.dataset.descripcion = descripcion;
     tr.dataset.stock1030 = stock1030 ?? 0;
     tr.dataset.stock1032 = stock1032 ?? 0;
     tr.dataset.dia = diaMostrar;
 
-    tr.querySelector('input[data-field="conteo"]').addEventListener("input", actualizarResumen);
+    const inputStockAct = tr.querySelector('input[data-field="stock1030_actual_table"]');
+    const inputConteo   = tr.querySelector('input[data-field="conteo_table"]');
+    const txtObs        = tr.querySelector("textarea");
 
+    inputConteo.addEventListener("input", actualizarResumen);
+
+    let selMotivoFirst = null;
+    let motivoReadonly = null;
     if (idx === 0) {
-      const sel = tr.querySelector('select[data-role="motivo-row"]');
-      sel.value = motivoGlobal;
-      sel.addEventListener("change", () => aplicarMotivoATodasLasFilas(sel.value));
+      selMotivoFirst = tr.querySelector('select[data-role="motivo-first-table"]');
+      selMotivoFirst.value = motivoGlobal;
+      selMotivoFirst.addEventListener("change", () => aplicarMotivoATodasLasFilas(selMotivoFirst.value));
+    } else {
+      motivoReadonly = tr.querySelector('input[data-role="motivo-readonly-table"]');
     }
 
-    return tr;
+    return { tr, codigo, descripcion, stock1030, stock1032, diaMostrar, inputStockAct, inputConteo, txtObs, selMotivoFirst, motivoReadonly };
+  }
+
+  function crearCardMobile(item, idx, rowId, base) {
+    const el = document.createElement("div");
+    el.className = "mobile-card";
+    el.dataset.rowId = rowId;
+
+    const motivoUI = (idx === 0)
+      ? `
+        <div class="field">
+          <label>Motivo (aplica a todos)</label>
+          <select data-role="motivo-first-mobile">
+            <option value="Semanal">Semanal</option>
+            <option value="Administración">Administración</option>
+          </select>
+        </div>`
+      : `
+        <div class="field">
+          <label>Motivo (copiado)</label>
+          <input type="text" readonly data-role="motivo-readonly-mobile" value="${escapeHtml(motivoGlobal)}" />
+        </div>`;
+
+    el.innerHTML = `
+      <div class="mc-head">
+        <div>
+          <div class="mc-code">${escapeHtml(base.codigo)}</div>
+          <div class="mc-desc">${escapeHtml(base.descripcion)}</div>
+        </div>
+      </div>
+
+      <div class="mc-meta">
+        <div class="pill"><span>Stock 1030</span><strong>${escapeHtml(base.stock1030)}</strong></div>
+        <div class="pill"><span>Stock 1032</span><strong>${escapeHtml(base.stock1032)}</strong></div>
+        <div class="pill" style="grid-column:1/-1;">
+          <span>Día stock</span><strong style="font-size:12px;">${escapeHtml(base.diaMostrar)}</strong>
+        </div>
+      </div>
+
+      <div class="mc-grid">
+        <div class="field">
+          <label>Stock 1030 ACTUAL</label>
+          <input type="number" min="0" step="1" inputmode="numeric" data-field="stock1030_actual_mobile" placeholder="" />
+        </div>
+        <div class="field">
+          <label>Conteo físico</label>
+          <input type="number" min="0" step="1" inputmode="numeric" data-field="conteo_mobile" placeholder="" />
+        </div>
+      </div>
+
+      <div class="mc-bottom">
+        ${motivoUI}
+        <div class="field">
+          <label>Observaciones</label>
+          <textarea data-field="obs_mobile" placeholder=""></textarea>
+        </div>
+      </div>
+    `;
+
+    const inputStockAct = el.querySelector('input[data-field="stock1030_actual_mobile"]');
+    const inputConteo   = el.querySelector('input[data-field="conteo_mobile"]');
+    const txtObs        = el.querySelector('textarea[data-field="obs_mobile"]');
+
+    inputConteo.addEventListener("input", actualizarResumen);
+
+    let selMotivoFirst = null;
+    let motivoReadonly = null;
+    if (idx === 0) {
+      selMotivoFirst = el.querySelector('select[data-role="motivo-first-mobile"]');
+      selMotivoFirst.value = motivoGlobal;
+      selMotivoFirst.addEventListener("change", () => aplicarMotivoATodasLasFilas(selMotivoFirst.value));
+    } else {
+      motivoReadonly = el.querySelector('input[data-role="motivo-readonly-mobile"]');
+    }
+
+    return { el, inputStockAct, inputConteo, txtObs, selMotivoFirst, motivoReadonly };
   }
 
   function poblarResponsables() {
@@ -496,13 +726,19 @@
     setStatus("Seleccioná un responsable y hacé clic en «Cargar mis insumos».", "info");
   }
 
+  function limpiarUI() {
+    tbody.innerHTML = "";
+    mobileList.innerHTML = "";
+    for (const k of Object.keys(rowStore)) delete rowStore[k];
+    actualizarResumen();
+    setGuardarEnabled(false);
+  }
+
   async function cargarPlan() {
     const responsable = $("responsable").value;
     syncPrintResponsable();
 
-    tbody.innerHTML = "";
-    actualizarResumen();
-    $("btnGuardar").disabled = true;
+    limpiarUI();
     setStatus("Cargando insumos para " + responsable + "...", "info");
 
     try {
@@ -515,15 +751,62 @@
         return;
       }
 
-      items.forEach((i, idx) => tbody.appendChild(crearFila(i, idx)));
-      aplicarMotivoATodasLasFilas(motivoGlobal);
+      // construimos ambas vistas (tabla + cards) y las sincronizamos
+      items.forEach((item, idx) => {
+        const rowId = String(idx + 1);
 
-      $("btnGuardar").disabled = false;
+        const baseTable = crearFilaTabla(item, idx, rowId);
+        tbody.appendChild(baseTable.tr);
+
+        const baseMobile = crearCardMobile(item, idx, rowId, baseTable);
+        mobileList.appendChild(baseMobile.el);
+
+        // Guardamos referencias para guardar / sync
+        rowStore[rowId] = {
+          rowId,
+          tr: baseTable.tr,
+          codigo: baseTable.codigo,
+          descripcion: baseTable.descripcion,
+          stock1030: baseTable.stock1030,
+          stock1032: baseTable.stock1032,
+          dia: baseTable.diaMostrar,
+
+          inputStockActTable: baseTable.inputStockAct,
+          inputConteoTable: baseTable.inputConteo,
+          txtObsTable: baseTable.txtObs,
+          selMotivoFirstTable: baseTable.selMotivoFirst,
+          motivoReadonlyTable: baseTable.motivoReadonly,
+
+          inputStockActMobile: baseMobile.inputStockAct,
+          inputConteoMobile: baseMobile.inputConteo,
+          txtObsMobile: baseMobile.txtObs,
+          selMotivoFirstMobile: baseMobile.selMotivoFirst,
+          motivoReadonlyMobile: baseMobile.motivoReadonly
+        };
+
+        // Sync inputs table <-> mobile (edites donde edites, queda igual)
+        linkTwoInputs(baseTable.inputStockAct, baseMobile.inputStockAct, actualizarResumen);
+        linkTwoInputs(baseTable.inputConteo,   baseMobile.inputConteo,   actualizarResumen);
+
+        // Observaciones: sync (input event en textarea)
+        baseTable.txtObs.addEventListener("input", () => baseMobile.txtObs.value = baseTable.txtObs.value);
+        baseMobile.txtObs.addEventListener("input", () => baseTable.txtObs.value = baseMobile.txtObs.value);
+      });
+
+      aplicarMotivoATodasLasFilas(motivoGlobal);
+      setGuardarEnabled(true);
       actualizarResumen();
       setStatus(`${items.length} insumos cargados. Completá los conteos y luego guardá.`, "ok");
+
+      // en mobile, scrollea al primer card (sensación “app”)
+      if (isMobileView()) {
+        mobileList.firstElementChild?.scrollIntoView({ behavior: "smooth", block: "start" });
+      }
+
     } catch (e) {
       console.error(e);
       setStatus("Error al cargar insumos: " + e.message, "err");
+      setGuardarEnabled(false);
     }
   }
 
@@ -531,18 +814,17 @@
     const responsable = $("responsable").value;
     syncPrintResponsable();
 
-    const filas = Array.from(tbody.querySelectorAll("tr"));
     const conteos = [];
 
-    for (const tr of filas) {
-      const fisicoStr = tr.querySelector('input[data-field="conteo"]').value.trim();
+    for (const r of Object.values(rowStore)) {
+      const fisicoStr = (r.inputConteoMobile?.value ?? r.inputConteoTable?.value ?? "").trim();
       if (fisicoStr === "") continue;
 
       const conteoFisico = Number(fisicoStr);
       if (!Number.isFinite(conteoFisico) || conteoFisico < 0) continue;
 
-      const stockActualStr = tr.querySelector('input[data-field="stock1030_actual"]').value.trim();
-      const stock1030Original = Number(tr.dataset.stock1030 || 0);
+      const stockActualStr = (r.inputStockActMobile?.value ?? r.inputStockActTable?.value ?? "").trim();
+      const stock1030Original = Number(r.stock1030 || 0);
 
       let stock1030Final = stock1030Original;
       if (stockActualStr !== "") {
@@ -550,16 +832,18 @@
         if (Number.isFinite(n) && n >= 0) stock1030Final = n;
       }
 
+      const obs = (r.txtObsMobile?.value ?? r.txtObsTable?.value ?? "");
+
       conteos.push({
-        codigo: tr.dataset.codigo,
-        descripcion: tr.dataset.descripcion,
+        codigo: r.codigo,
+        descripcion: r.descripcion,
         stock1030: stock1030Final,
         stock1030Original,
-        stock1032: Number(tr.dataset.stock1032 || 0),
-        dia: tr.dataset.dia,
+        stock1032: Number(r.stock1032 || 0),
+        dia: r.dia,
         conteoFisico,
         motivo: motivoGlobal,
-        observaciones: tr.querySelector("textarea").value
+        observaciones: obs
       });
     }
 
@@ -569,7 +853,7 @@
     }
 
     setStatus("Guardando conteos...", "info");
-    $("btnGuardar").disabled = true;
+    setGuardarEnabled(false);
 
     try {
       await apiPost(URL_GUARDAR, { responsable, conteos });
@@ -578,14 +862,18 @@
       console.error(e);
       setStatus("Error al guardar conteos: " + e.message, "err");
     } finally {
-      $("btnGuardar").disabled = false;
+      setGuardarEnabled(true);
     }
   }
 
+  // Eventos
   $("responsable").addEventListener("change", syncPrintResponsable);
 
   $("btnCargar").addEventListener("click", cargarPlan);
   $("btnGuardar").addEventListener("click", guardarConteos);
+
+  $("btnCargarMobile").addEventListener("click", cargarPlan);
+  $("btnGuardarMobile").addEventListener("click", guardarConteos);
 
   $("btnImprimir").addEventListener("click", () => {
     syncPrintResponsable();
